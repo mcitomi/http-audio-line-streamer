@@ -1,0 +1,38 @@
+# Stream your audio line over HTTP
+
+## Required softwares:
+- A virtual audio cable mod: Recommended: https://vb-audio.com/Cable/
+- FFmpeg: https://ffmpeg.org/ (be available in environment variables)
+- NodeJS (and npm modules, express, fluent-ffmpeg -> `npm i`)
+
+### Forward a port for the http server
+- What you set in the config.json file (http_port)
+
+## Config:
+Use this command to list your audio devices which able to stream:
+```
+ffmpeg -list_devices true -f dshow -i dummy
+```
+
+**config.json:**
+```json
+{
+    "http_port" : 8080, // The main http server port
+    "local_stream_url" : "233.1.1.1:9999",  // Local UDP multicast audio stream port (just pick a IPv4 multicast address)
+    "audio_line" : "CABLE Output (VB-Audio Virtual Cable)", // Your streamable audio line
+    "audio_api" : "dshow",   // Your system default audio api, Windows: dshow Linux: pulse or alsa
+    "codec" : "libmp3lame", // FFmpeg default MP3 codec
+    "bitrate" : 320,    // Stream bitrate in kbps
+    "format" : "mp3"    // Stream container format (different format requires different codec)
+}
+```
+
+## Start:
+Just run the index.js with node.
+
+## Playback:
+- Use VLC and "Open network stream" or open your http server url in the browser (doesn't always work, Edge usually supports it).
+- Your url is: localhost:{http_port} // for example localhost:8080
+
+*Discord: @mcitomi / https://dc.mcitomi.hu*
+<3
