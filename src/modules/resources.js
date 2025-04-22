@@ -12,14 +12,16 @@ export function monitorUpdater() {
 
 async function checkStats() {
     try {
-        let mainStats = await pidusage(process.pid);
-        let childStats = await pidusage(streamProcess.pid);
+        const stats = await pidusage([process.pid, streamProcess.pid]);
+        const mainStats = stats[process.pid];
+        const childStats = stats[streamProcess.pid];
+        
         monitorBox.setContent(
             `{magenta-bg}Main process and HTTP server{/magenta-bg} (PID ${process.pid})\n` +
             `CPU: ${mainStats.cpu.toFixed(2)}%  | Memory: ${(mainStats.memory / 1024 / 1024).toFixed(2)} MB\n\n` +
             `{magenta-bg}FFmpeg Stream{/magenta-bg} (PID ${streamProcess.pid})\n` +
             `CPU: ${childStats.cpu.toFixed(2)}%  | Memory: ${(childStats.memory / 1024 / 1024).toFixed(2)} MB\n` +
-            `\n{cyan-fg}Connected clients:{/cyan-fg} ${clientCount}\n`+
+            `\n{cyan-fg}Connected clients:{/cyan-fg} ${clientCount}\n` +
             `{green-fg}Last check:{/green-fg} ${new Date().toISOString().split('.')[0].replace('T', ' ')}\n`
         );
     } catch (err) {
