@@ -33,7 +33,8 @@ ffmpeg -list_devices true -f dshow -i dummy
     "bitrate" : 320,    // Stream bitrate in kbps
     "format" : "mp3",    // Stream container format (different format requires different codec)
     "monitor_interval" : 45,  // Resource monitor update interval in seconds (May result high CPU usage)
-    "enable_ffmpeg_log" : true  // Disable / Enable the FFmpeg log
+    "enable_ffmpeg_log" : true,  // Disable / Enable the FFmpeg log
+    "use_ps_fetch" : false  // When true uses ps instead of proc files to fetch process information
 }
 ```
 

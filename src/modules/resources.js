@@ -16,7 +16,7 @@ export function monitorUpdater() {
 async function checkStats(cpuMonitor) {
     try {
         const mem = process.memoryUsage();
-        const childStats = await pidusage(streamProcess.pid);
+        const childStats = await pidusage(streamProcess.pid, {usePs: CONFIG.use_ps_fetch});
 
         monitorBox.setContent(
             `{magenta-bg}Main process and HTTP server{/magenta-bg} (PID ${process.pid})\n` +
