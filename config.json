@@ -6,5 +6,6 @@
     "codec" : "libmp3lame",
     "bitrate" : 320,
     "format" : "mp3",
-    "monitor_interval" : 2
+    "monitor_interval" : 45,
+    "enable_ffmpeg_log" : true
 }

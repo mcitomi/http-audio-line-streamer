@@ -8,7 +8,6 @@ export function monitorUpdater() {
         try {
             let mainStats = await pidusage(process.pid);
             let childStats = await pidusage(streamProcess.pid);
-
             monitorBox.setContent(
                 `{magenta-bg}Main process and HTTP server{/magenta-bg} (PID ${process.pid})\n` +
                 `CPU: ${mainStats.cpu.toFixed(2)}%  | Memory: ${(mainStats.memory / 1024 / 1024).toFixed(2)} MB\n\n` +

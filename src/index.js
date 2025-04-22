@@ -21,21 +21,25 @@ export const streamProcess = spawn('ffmpeg', [
     `udp://${CONFIG.local_stream_url}`
 ]);
 
-streamProcess.stdout.on('data', (data) => {
-    ffmpegLog.log(`stdout: ${data.toString()}`);
-});
-
-streamProcess.stderr.on('data', (data) => {
-    ffmpegLog.log(`stderr: ${data.toString()}`);
-});
-
-streamProcess.on('error', (err) => {
-    ffmpegLog.log(`FFmpeg error: ${err.message}`);
-});
-
-streamProcess.on('close', (code) => {
-    ffmpegLog.log(`FFmpeg stopped, exit code: ${code}`);
-});
+if(CONFIG.enable_ffmpeg_log) {
+    streamProcess.stdout.on('data', (data) => {
+        
+        ffmpegLog.log(`stdout: ${data.toString()}`);
+    });
+    
+    streamProcess.stderr.on('data', (data) => {
+        logger("tez", "log")
+        ffmpegLog.log(`stderr: ${data.toString()}`);
+    });
+    
+    streamProcess.on('error', (err) => {
+        ffmpegLog.log(`FFmpeg error: ${err.message}`);
+    });
+    
+    streamProcess.on('close', (code) => {
+        ffmpegLog.log(`FFmpeg stopped, exit code: ${code}`);
+    });
+}
 
 monitorUpdater();
 

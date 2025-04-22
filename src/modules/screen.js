@@ -1,5 +1,6 @@
 import blessed from "blessed";
 import { streamProcess } from "../index.js";
+import CONFIG from "../../config.json" with { type: "json" };
 
 export const screen = blessed.screen({
     smartCSR: true,
@@ -57,7 +58,7 @@ export const monitorBox = blessed.box({
     top: 1,
     left: '50%',
     width: '50%',
-    height: 10,
+    height: CONFIG.enable_ffmpeg_log ? 10 : "100%-1",
     border: { type: 'line' },
     style: { border: { fg: 'cyan' } },
     content: 'Loading...',
@@ -79,7 +80,7 @@ const header = blessed.box({
 
 screen.append(header);
 screen.append(logBox);
-screen.append(ffmpegLog);
+CONFIG.enable_ffmpeg_log && screen.append(ffmpegLog);
 screen.append(monitorBox);
 screen.render();
 

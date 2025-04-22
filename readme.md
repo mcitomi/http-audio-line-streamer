@@ -32,7 +32,8 @@ ffmpeg -list_devices true -f dshow -i dummy
     "codec" : "libmp3lame", // FFmpeg default MP3 codec
     "bitrate" : 320,    // Stream bitrate in kbps
     "format" : "mp3",    // Stream container format (different format requires different codec)
-    "monitor_interval" : 2  // Resource monitor update interval in seconds
+    "monitor_interval" : 45,  // Resource monitor update interval in seconds (May result high CPU usage)
+    "enable_ffmpeg_log" : true  // Disable / Enable the FFmpeg log
 }
 ```
 
