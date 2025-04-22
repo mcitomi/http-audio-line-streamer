@@ -1,6 +1,7 @@
 import { logBox } from "./screen.js";
+import { getFormattedTime } from "./time.js";
 export function logger(text, type) {
-    const timestamp = new Date().toISOString().split('.')[0].replace('T', ' ');
+    const timestamp = getFormattedTime();
     switch (type) {
         case "log":
             logBox.log(`[${timestamp}] - ${text}\n`);

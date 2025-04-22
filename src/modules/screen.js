@@ -4,7 +4,7 @@ import CONFIG from "../../config.json" with { type: "json" };
 
 export const screen = blessed.screen({
     smartCSR: true,
-    title: "HAL Streamer v.1.3.1."
+    title: "HAL Streamer v.1.3.2."
 });
 
 export const logBox = blessed.log({
@@ -71,7 +71,7 @@ const header = blessed.box({
     width: '100%',
     height: 1,
     tags: true,
-    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.1. made by: @mcitomi {/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
+    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.2. made by: @mcitomi {/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
     style: {
         fg: 'white',
         bg: 'green'

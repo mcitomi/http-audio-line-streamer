@@ -66,6 +66,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(CONFIG.http_port, () => {
-    logger("HAL Streamer v.1.3.1. made by: @mcitomi", "log");
+    logger("HAL Streamer v.1.3.2. made by: @mcitomi", "log");
     logger(`Http server listening at http://localhost:${CONFIG.http_port}/`, "log");
 });
