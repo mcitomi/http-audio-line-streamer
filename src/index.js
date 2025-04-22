@@ -23,12 +23,10 @@ export const streamProcess = spawn('ffmpeg', [
 
 if(CONFIG.enable_ffmpeg_log) {
     streamProcess.stdout.on('data', (data) => {
-        
         ffmpegLog.log(`stdout: ${data.toString()}`);
     });
     
     streamProcess.stderr.on('data', (data) => {
-        logger("tez", "log")
         ffmpegLog.log(`stderr: ${data.toString()}`);
     });
     
