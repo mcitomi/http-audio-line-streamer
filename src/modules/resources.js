@@ -20,7 +20,7 @@ async function checkStats() {
             `{magenta-bg}FFmpeg Stream{/magenta-bg} (PID ${streamProcess.pid})\n` +
             `CPU: ${childStats.cpu.toFixed(2)}%  | Memory: ${(childStats.memory / 1024 / 1024).toFixed(2)} MB\n` +
             `\n{cyan-fg}Connected clients:{/cyan-fg} ${clientCount}\n`+
-            `{green-fg}Updated:{/green-fg} ${new Date().toISOString().split('.')[0].replace('T', ' ')}\n`
+            `{green-fg}Last check:{/green-fg} ${new Date().toISOString().split('.')[0].replace('T', ' ')}\n`
         );
     } catch (err) {
         monitorBox.setContent('Monitor error:\n' + err.message);
