@@ -1,11 +1,19 @@
 # Stream your audio line over HTTP
+<img src="https://i.imgur.com/l8Bx3my.png">
 
 ## Required softwares:
 - A virtual audio cable mod: Recommended: https://vb-audio.com/Cable/
 - FFmpeg: https://ffmpeg.org/ (be available in environment variables)
-- NodeJS (and npm modules, express, fluent-ffmpeg -> `npm i`)
+- NodeJS 
+### NPM modules
+Use `npm install` to install all required module.  
+Used modules:
+- blessed
+- express
+- fluent-ffmpeg
+- pidusage
 
-### Forward a port for the http server
+## Forward a port for the http server
 - What you set in the config.json file (http_port)
 
 ## Config:
@@ -23,12 +31,13 @@ ffmpeg -list_devices true -f dshow -i dummy
     "audio_api" : "dshow",   // Your system default audio api, Windows: dshow Linux: pulse or alsa
     "codec" : "libmp3lame", // FFmpeg default MP3 codec
     "bitrate" : 320,    // Stream bitrate in kbps
-    "format" : "mp3"    // Stream container format (different format requires different codec)
+    "format" : "mp3",    // Stream container format (different format requires different codec)
+    "monitor_interval" : 2  // Resource monitor update interval in seconds
 }
 ```
 
 ## Start:
-Just run the index.js with node.
+Just run the src/index.js with node.
 
 ## Playback:
 - Use VLC and "Open network stream" or open your http server url in the browser (doesn't always work, Edge usually supports it).
