@@ -4,7 +4,7 @@ import CONFIG from "../../config.json" with { type: "json" };
 
 export const screen = blessed.screen({
     smartCSR: true,
-    title: "HAL Streamer v.1.3.2."
+    title: "H.A.L. Streamer v.1.3.3."
 });
 
 export const logBox = blessed.log({
@@ -37,12 +37,13 @@ export const logBox = blessed.log({
     tags: true
 });
 
-export const ffmpegLog = blessed.log({
+export const ffmpegLog = blessed.list({
     label: ' FFmpeg Log ',
     top: 11,
     left: '50%',
     width: '50%',
     height: '100%-11',
+    items: [],
     border: { type: 'line' },
     style: { fg: 'yellow', border: { fg: 'magenta' } },
     scrollback: 1000,
@@ -52,6 +53,13 @@ export const ffmpegLog = blessed.log({
     tags: true,
     scrollbar: { ch: ' ', inverse: true }
 });
+
+export function pushFFmpegLog(msg) {
+    if (ffmpegLog?.items?.length > 50) ffmpegLog.shiftItem(1);
+    ffmpegLog.addItem(msg);
+    ffmpegLog.scrollTo(ffmpegLog.items.length);
+    screen.render();
+}
 
 export const monitorBox = blessed.box({
     label: ' Resources ',
@@ -71,7 +79,7 @@ const header = blessed.box({
     width: '100%',
     height: 1,
     tags: true,
-    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.2. made by: @mcitomi {/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
+    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.3.{/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
     style: {
         fg: 'white',
         bg: 'green'

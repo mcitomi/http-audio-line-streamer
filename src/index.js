@@ -6,7 +6,7 @@ import CONFIG from "../config.json" with { type: "json" };
 
 import { logger } from "./modules/logger.js";
 import { monitorUpdater } from "./modules/resources.js";
-import { ffmpegLog } from "./modules/screen.js";
+import { pushFFmpegLog } from "./modules/screen.js";
 
 const app = Express();
 
@@ -23,19 +23,19 @@ export const streamProcess = spawn('ffmpeg', [
 
 if(CONFIG.enable_ffmpeg_log) {
     streamProcess.stdout.on('data', (data) => {
-        ffmpegLog.log(`stdout: ${data.toString()}`);
+        pushFFmpegLog(`stdout: ${data.toString()}`);
     });
     
     streamProcess.stderr.on('data', (data) => {
-        ffmpegLog.log(`stderr: ${data.toString()}`);
+        pushFFmpegLog(`stderr: ${data.toString()}`);
     });
     
     streamProcess.on('error', (err) => {
-        ffmpegLog.log(`FFmpeg error: ${err.message}`);
+        pushFFmpegLog(`FFmpeg error: ${err.message}`);
     });
     
     streamProcess.on('close', (code) => {
-        ffmpegLog.log(`FFmpeg stopped, exit code: ${code}`);
+        pushFFmpegLog(`FFmpeg stopped, exit code: ${code}`);
     });
 }
 
@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
         .audioCodec('copy')
         .format(CONFIG.format)
         .on('start', () => {
-            logger(`FFmpeg info: Streaming started to ${clientInfo}`, "info");
+            logger(`Client ${clientInfo} connected: Stream started`, "info");
         })
         .on('error', (err) => {
             err.message.includes("Output stream closed") ? logger(`Client ${clientInfo} disconnected`, "dc") : logger(`FFmpeg error: ${err.message}`, "error");
@@ -66,6 +66,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(CONFIG.http_port, () => {
-    logger("HAL Streamer v.1.3.2. made by: @mcitomi", "log");
+    logger("H.A.L. Streamer v.1.3.3. made by: @mcitomi", "log");
     logger(`Http server listening at http://localhost:${CONFIG.http_port}/`, "log");
 });
