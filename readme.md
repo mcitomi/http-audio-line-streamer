@@ -3,7 +3,22 @@
 
 <img src="https://imgur.com/ES5kpwZ.png">
 
-## Required softwares:
+## 🚀 Quickstart:
+- Clone this repo to your computer or download it.
+- Install the required softwares and node modules.
+- Configurate your server.
+- Just run the src/index.js with node .
+- Be happy c:
+
+### ⌨ Keybinds:
+- `[q] [escape] [C-c]` : Close the program
+- `[tab]` : Select screen
+- `[Up] [Down] [PageUp] [PageDown]` : Scroll the log in the selected screen
+
+## 🛜 Forward a port for the http server
+- What you set in the config.json file (http_port)
+
+## 📦 Required softwares:
 - A virtual audio cable mod: Recommended: https://vb-audio.com/Cable/ (or https://vb-audio.com/Voicemeeter/)
 - FFmpeg: https://ffmpeg.org/ (be available in environment variables)
 - NodeJS 
@@ -15,28 +30,12 @@ Used modules:
 - fluent-ffmpeg
 - pidusage
 
-## Quickstart:
-- Clone this repo to your computer or download it.
-- Intall the required softwares and node modules.
-- Configurate your server.
-- Just run the src/index.js with node.
-- Be happy c:
-
-## Forward a port for the http server
-- What you set in the config.json file (http_port)
-
-
-### Keybinds:
-- `[q] [escape] [C-c]` : Close the program
-- `[tab]` : Select screen
-- `[Up] [Down] [PageUp] [PageDown]` : Scroll the log in the selected screen
-
-## Playback:
+## 🔊 Playback:
 - Use VLC and "Open network stream" and paste your url or open your http server url in the browser (doesn't always work, Edge usually supports it).
 - Your url is: http://localhost:{http_port} // for example http://localhost:8080/
 - To reduce latency, set the "network-caching" setting in VLC's settings to a lower value, e.g. 200ms.
 
-## Config:
+## 👨‍💻 Config:
 Use this command to list your audio devices which able to stream:
 ```
 ffmpeg -list_devices true -f dshow -i dummy
@@ -48,7 +47,7 @@ ffmpeg -list_devices true -f dshow -i dummy
     "http_port": 8080, // The main http server port
     "stream": {
         "local_url": "233.1.1.1:9999",  // Local UDP multicast audio stream port (just pick a IPv4 multicast address)
-        "audio_line": "CABLE Output (VB-Audio Virtual Cable)",  // Your streamable audio input line
+        "audio_line": "CABLE Output (VB-Audio Virtual Cable)",  // Your streamable audio input line name
         "audio_api": "dshow",   // Your system audio api, Windows: dshow Linux: pulse or alsa
         "codec": "libmp3lame",  // FFmpeg audio codec (libmp3lame for mp3)
         "bitrate": 320, // Stream bitrate in kbps
@@ -64,7 +63,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 }
 ```
 
-# Changelog
+# 🪵 Changelog
 ### 1.3.6.
 - Added: log / screen scrollback.
 - Screen change with tab.
