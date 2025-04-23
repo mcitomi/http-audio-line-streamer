@@ -1,8 +1,10 @@
-# Stream your audio line over HTTP
+# Stream your audio line over HTTP 💫
+​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP. The project aims to provide an easy-to-use and configurable solution for streaming audio data.
+
 <img src="https://imgur.com/ES5kpwZ.png">
 
 ## Required softwares:
-- A virtual audio cable mod: Recommended: https://vb-audio.com/Cable/
+- A virtual audio cable mod: Recommended: https://vb-audio.com/Cable/ (or https://vb-audio.com/Voicemeeter/)
 - FFmpeg: https://ffmpeg.org/ (be available in environment variables)
 - NodeJS 
 ### NPM modules
@@ -13,8 +15,26 @@ Used modules:
 - fluent-ffmpeg
 - pidusage
 
+## Quickstart:
+- Clone this repo to your computer or download it.
+- Intall the required softwares and node modules.
+- Configurate your server.
+- Just run the src/index.js with node.
+- Be happy c:
+
 ## Forward a port for the http server
 - What you set in the config.json file (http_port)
+
+
+### Keybinds:
+- `[q] [escape] [C-c]` : Close the program
+- `[tab]` : Select screen
+- `[Up] [Down] [PageUp] [PageDown]` : Scroll the log in the selected screen
+
+## Playback:
+- Use VLC and "Open network stream" and paste your url or open your http server url in the browser (doesn't always work, Edge usually supports it).
+- Your url is: http://localhost:{http_port} // for example http://localhost:8080/
+- To reduce latency, set the "network-caching" setting in VLC's settings to a lower value, e.g. 200ms.
 
 ## Config:
 Use this command to list your audio devices which able to stream:
@@ -44,21 +64,6 @@ ffmpeg -list_devices true -f dshow -i dummy
 }
 ```
 
-## Quickstart:
-- Intall the required softwares and node modules.
-- Configurate your server.
-- Just run the src/index.js with node.
-- Be happy c:
-
-### Keybinds:
-- `[q] [escape] [C-c]` : Close the program
-- `[tab]` : Select screen
-- `[Up] [Down] [PageUp] [PageDown]` : Scroll the log in the selected screen
-
-## Playback:
-- Use VLC and "Open network stream" and paste your url or open your http server url in the browser (doesn't always work, Edge usually supports it).
-- Your url is: http://localhost:{http_port} // for example http://localhost:8080/
-
 # Changelog
 ### 1.3.6.
 - Added: log / screen scrollback.
@@ -80,6 +85,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 - H.A.L. （づ￣3￣）づ╭❤️～
 - FFmpeg log screen has been changed to a list type and a more efficient update method has been added.
 - Added new CPU monitor function instead of "pidusage" module to save CPU load.
+- Displays "Heap" memory usage.
 
 ### 1.3.2.
 - Added new timestamp method for handling timezones.
