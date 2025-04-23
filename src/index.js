@@ -13,15 +13,15 @@ const app = Express();
 export var clientCount = 0;
 
 export const streamProcess = spawn('ffmpeg', [
-    '-f', CONFIG.audio_api,
-    '-i', `audio=${CONFIG.audio_line}`,
-    '-c:a', CONFIG.codec,
-    '-b:a', `${CONFIG.bitrate}k`,
-    '-f', CONFIG.format,
-    `udp://${CONFIG.local_stream_url}`
+    '-f', CONFIG.stream.audio_api,
+    '-i', `audio=${CONFIG.stream.audio_line}`,
+    '-c:a', CONFIG.stream.codec,
+    '-b:a', `${CONFIG.stream.bitrate}k`,
+    '-f', CONFIG.stream.format,
+    `udp://${CONFIG.stream.local_url}`
 ]);
 
-if(CONFIG.enable_ffmpeg_log) {
+if(CONFIG.monitoring.enable_ffmpeg_log) {
     streamProcess.stdout.on('data', (data) => {
         pushFFmpegLog(`stdout: ${data.toString()}`);
     });
@@ -48,9 +48,9 @@ app.get('/', (req, res) => {
     clientCount++;
     const clientInfo = `${req.headers['user-agent']} - ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`;
 
-    ffmpeg(`udp://${CONFIG.local_stream_url}`)
+    ffmpeg(`udp://${CONFIG.stream.local_url}`)
         .audioCodec('copy')
-        .format(CONFIG.format)
+        .format(CONFIG.stream.format)
         .on('start', () => {
             logger(`Client ${clientInfo} connected: Stream started`, "info");
         })
@@ -66,6 +66,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(CONFIG.http_port, () => {
-    logger("H.A.L. Streamer v.1.3.5. made by: @mcitomi", "log");
+    logger("H.A.L. Streamer v.1.3.6. made by: @mcitomi", "log");
     logger(`Http server listening at http://localhost:${CONFIG.http_port}/`, "log");
 });

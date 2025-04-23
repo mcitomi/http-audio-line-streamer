@@ -4,23 +4,20 @@ import CONFIG from "../../config.json" with { type: "json" };
 
 export const screen = blessed.screen({
     smartCSR: true,
-    title: "H.A.L. Streamer v.1.3.5."
+    title: "H.A.L. Streamer v.1.3.6."
 });
 
 export const logBox = blessed.log({
+    name: "log",
     label: ' Log ',
     top: 1,
     left: 0,
     width: '50%',
     height: '100%-1',
     border: { type: 'line' },
-    style: {
-        border: { fg: 'green' },
-        scrollbar: {
-            bg: 'green'
-        }
-    },
-    scrollback: 1000,
+    style: { border: { fg: 'green' } },
+    scrollback: CONFIG.monitoring.screen_max_scrollback,
+    scrollable: true,
     alwaysScroll: true,
     keys: true,
     mouse: true,
@@ -30,14 +27,16 @@ export const logBox = blessed.log({
             bg: 'grey'
         },
         style: {
-            inverse: true
-        }
+            bg: 'green'
+        },
+        inverse: true
     },
     vi: true,
     tags: true
 });
 
 export const ffmpegLog = blessed.list({
+    name: "fflog",
     label: ' FFmpeg Log ',
     top: 11,
     left: '50%',
@@ -46,8 +45,8 @@ export const ffmpegLog = blessed.list({
     items: [],
     border: { type: 'line' },
     style: { fg: 'yellow', border: { fg: 'magenta' } },
-    scrollback: 1000,
-    alwaysScroll: true,
+    scrollback: CONFIG.monitoring.screen_max_scrollback,
+    scrollable: true,
     keys: true,
     mouse: true,
     tags: true,
@@ -57,14 +56,15 @@ export const ffmpegLog = blessed.list({
 export function pushFFmpegLog(msg) {
     const lines = msg.split('bitrate');
 
-    if (ffmpegLog?.items?.length > 50) {
+    if (ffmpegLog?.items?.length > CONFIG.monitoring.ffmpeg_log_length) {
         ffmpegLog.shiftItem(1);
-        if(lines[1]) ffmpegLog.shiftItem(1);
+        if (lines[1]) ffmpegLog.shiftItem(1);
     };
-    
+
     ffmpegLog.addItem(lines[0]);
-    lines[1] && ffmpegLog.addItem("bitrate"+lines[1]);
-    ffmpegLog.scrollTo(ffmpegLog.items.length);
+    lines[1] && ffmpegLog.addItem("bitrate" + lines[1]);
+    
+    screen.focused?.name != "fflog" && ffmpegLog.scrollTo(ffmpegLog.items.length);
     screen.render();
 }
 
@@ -73,7 +73,7 @@ export const monitorBox = blessed.box({
     top: 1,
     left: '50%',
     width: '50%',
-    height: CONFIG.enable_ffmpeg_log ? 10 : "100%-1",
+    height: CONFIG.monitoring.enable_ffmpeg_log ? 10 : "100%-1",
     border: { type: 'line' },
     style: { border: { fg: 'cyan' } },
     content: 'Loading...',
@@ -86,7 +86,7 @@ const header = blessed.box({
     width: '100%',
     height: 1,
     tags: true,
-    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.5.{/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
+    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.6.{/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
     style: {
         fg: 'white',
         bg: 'green'
@@ -95,11 +95,25 @@ const header = blessed.box({
 
 screen.append(header);
 screen.append(logBox);
-CONFIG.enable_ffmpeg_log && screen.append(ffmpegLog);
+CONFIG.monitoring.enable_ffmpeg_log && screen.append(ffmpegLog);
 screen.append(monitorBox);
+
 screen.render();
 
 screen.key(['escape', 'q', 'C-c'], () => {
     streamProcess.kill();
     process.exit(0);
+});
+
+screen.key('tab', () => {
+    if(screen.focused.name == "log"){
+        ffmpegLog.focus();
+        ffmpegLog.setLabel(" [FFmpeg Log] ")
+        logBox.setLabel(" Log ");
+       
+    } else {
+        logBox.focus();
+        logBox.setLabel(" [Log] ");
+        ffmpegLog.setLabel(" FFmpeg Log ")
+    }
 });

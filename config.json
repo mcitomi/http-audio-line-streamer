@@ -1,12 +1,18 @@
 {
-    "http_port" : 8080,
-    "local_stream_url" : "233.1.1.1:9999",
-    "audio_line" : "CABLE Output (VB-Audio Virtual Cable)",
-    "audio_api" : "dshow",
-    "codec" : "libmp3lame",
-    "bitrate" : 320,
-    "format" : "mp3",
-    "monitor_interval" : 45,
-    "enable_ffmpeg_log" : true,
-    "use_ps_fetch" : false
+    "http_port": 8080,
+    "stream": {
+        "local_url": "233.1.1.1:9999",
+        "audio_line": "CABLE Output (VB-Audio Virtual Cable)",
+        "audio_api": "dshow",
+        "codec": "libmp3lame",
+        "bitrate": 320,
+        "format": "mp3"
+    },
+    "monitoring": {
+        "refresh_interval": 45,
+        "enable_ffmpeg_log": true,
+        "ffmpeg_log_length": 50,
+        "screen_max_scrollback": 1000,
+        "use_ps_fetch": false
+    }
 }

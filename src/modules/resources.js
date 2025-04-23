@@ -10,13 +10,13 @@ export function monitorUpdater() {
     checkStats(cpuMonitor);
     setInterval(() => {
         checkStats(cpuMonitor);
-    }, CONFIG.monitor_interval * 1000);
+    }, CONFIG.monitoring.refresh_interval * 1000);
 }
 
 async function checkStats(cpuMonitor) {
     try {
         const mem = process.memoryUsage();
-        const childStats = await pidusage(streamProcess.pid, {usePs: CONFIG.use_ps_fetch});
+        const childStats = await pidusage(streamProcess.pid, {usePs: CONFIG.monitoring.use_ps_fetch});
 
         monitorBox.setContent(
             `{magenta-bg}Main process and HTTP server{/magenta-bg} (PID ${process.pid})\n` +
