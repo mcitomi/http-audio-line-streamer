@@ -1,7 +1,9 @@
-import { writeFile } from "node:fs";
+import { writeFile, appendFile, existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { logBox, ffmpegLog } from "./screen.js";
 import { getFormattedTime } from "./time.js";
+
+import CONFIG from "../../config.json" with { type: "json" };
 
 export const LogTypes = {
     ERROR: "error",
@@ -10,8 +12,20 @@ export const LogTypes = {
     DISCONNECT: "dc"
 }
 
+if(!existsSync(join(process.cwd(), "logs"))) {
+    mkdirSync(join(process.cwd(), "logs"));
+}
+
 export function logger(text, type) {
     const timestamp = getFormattedTime();
+    if (CONFIG.monitoring.save_main_log) {
+        appendFile(join(process.cwd(), "logs", "log.txt"), `[${getFormattedTime()}] - ${text}\n`, (fserr) => {
+            if (fserr) {
+                logBox.log(`[${timestamp}] - {red-bg}Error creating log file!{/red-bg}\n`);
+            }
+        });
+    }
+
     switch (type) {
         case "log":
             logBox.log(`[${timestamp}] - ${text}\n`);
@@ -33,7 +47,7 @@ export function logger(text, type) {
 }
 
 export function createFFmpegLogFile() {
-    writeFile(join(process.cwd(), `ffmpeg-crash-log-${Date.now()}.txt`), `${getFormattedTime()} FFmpeg process crashed!\n${JSON.stringify(ffmpegLog.items.map(item => item.getText()), null, 4)}`, (fserr) => {
+    writeFile(join(process.cwd(), "logs", `ffmpeg-crash-log-${Date.now()}.txt`), `${getFormattedTime()} FFmpeg process crashed!\n${JSON.stringify(ffmpegLog.items.map(item => item.getText()), null, 4)}`, (fserr) => {
         if (fserr) {
             logger("FFmpeg process crashed! Error creating log file!", LogTypes.ERROR);
         }

@@ -13,6 +13,9 @@
         "enable_ffmpeg_log": true,
         "ffmpeg_log_length": 50,
         "screen_max_scrollback": 1000,
-        "use_ps_fetch": false
+        "use_ps_fetch": false,
+        "save_main_log" : true,
+        "save_ffmpeg_log" : true,
+        "save_resource_log" : true
     }
 }

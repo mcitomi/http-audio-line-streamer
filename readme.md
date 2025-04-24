@@ -59,12 +59,18 @@ ffmpeg -list_devices true -f dshow -i dummy
         "enable_ffmpeg_log": true,  // Disable / Enable FFmpeg log
         "ffmpeg_log_length": 50,    // Maximum length of FFmpeg log (to save memory)
         "screen_max_scrollback": 1000,  // Screen module max scrollback size
-        "use_ps_fetch": false   // When true uses ps instead of proc files to fetch process information
+        "use_ps_fetch": false,   // When true uses ps instead of proc files to fetch process information
+        "save_main_log" : true,    // Disable / Enable to save the main "Log" screen values to a log file
+        "save_ffmpeg_log" : false,   // Disable / Enable to save the "FFmpeg Log" screen values to a log file
+        "save_resource_log" : false  // Disable / Enable to save resource usage to a log file
     }
 }
 ```
 
 # 📝 Changelog
+### 1.3.8.
+- Ability to log everything to /logs directory. ✨ (main screen, FFmpeg console and resource monitor).
+
 ### 1.3.7.
 - Monitoring updated: Handle childprocess crashes and design improved.
 - FFmpeg crash handler and crash log file added.
@@ -127,5 +133,5 @@ ffmpeg -list_devices true -f dshow -i dummy
 - A basic http server.
 - Bult in FFmpeg stream method with Node exec.
 
-*Discord: @mcitomi / https://dc.mcitomi.hu*
+💌 *Discord: @mcitomi / https://dc.mcitomi.hu*
 <3

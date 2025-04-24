@@ -1,10 +1,15 @@
 import blessed from "blessed";
+import { appendFile } from "node:fs";
+import { join } from "node:path";
+
 import { streamProcess } from "../index.js";
+import { getFormattedTime } from "./time.js";
+
 import CONFIG from "../../config.json" with { type: "json" };
 
 export const screen = blessed.screen({
     smartCSR: true,
-    title: "H.A.L. Streamer v.1.3.7."
+    title: "H.A.L. Streamer v.1.3.8."
 });
 
 export const logBox = blessed.log({
@@ -54,6 +59,14 @@ export const ffmpegLog = blessed.list({
 });
 
 export function pushFFmpegLog(msg) {
+    if (CONFIG.monitoring.save_ffmpeg_log) {
+        appendFile(join(process.cwd(), "logs", "ffmpeg-log.txt"), `[${getFormattedTime()}] - ${msg}\n`, (fserr) => {
+            if (fserr) {
+                logBox.log(`[${timestamp}] - {red-bg}Error creating ffmpeg-log file!{/red-bg}\n`);
+            }
+        });
+    }
+
     const lines = msg.split('bitrate');
 
     if (ffmpegLog?.items?.length > CONFIG.monitoring.ffmpeg_log_length) {
@@ -86,7 +99,7 @@ const header = blessed.box({
     width: '100%',
     height: 1,
     tags: true,
-    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.7.{/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
+    content: '{center}{bold} HTTP Audio Line Streamer v.1.3.8.{/bold} - {blue-fg}www.mcitomi.hu{/blue-fg}{/center}',
     style: {
         fg: 'white',
         bg: 'green'
