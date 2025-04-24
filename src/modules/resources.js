@@ -16,13 +16,19 @@ export function monitorUpdater() {
 async function checkStats(cpuMonitor) {
     try {
         const mem = process.memoryUsage();
-        const childStats = await pidusage(streamProcess.pid, {usePs: CONFIG.monitoring.use_ps_fetch});
+        const childStats = await pidusage(streamProcess.pid, { usePs: CONFIG.monitoring.use_ps_fetch }).catch(() => {
+            return {
+                cpu: 0,
+                memory: 0,
+                failed: true
+            }
+        });
 
         monitorBox.setContent(
             `{magenta-bg}Main process and HTTP server{/magenta-bg} (PID ${process.pid})\n` +
-            `CPU: ${cpuMonitor.getCpuPercent()}%  | Memory: ${(mem.rss / 1024 / 1024).toFixed(2)} MB | Heap: ${(mem.heapUsed / 1024 / 1024).toFixed(2)} MB / ${(mem.heapTotal / 1024 / 1024).toFixed(2)} MB\n\n` +
-            `{magenta-bg}FFmpeg Stream{/magenta-bg} (PID ${streamProcess.pid})\n` +
-            `CPU: ${childStats.cpu.toFixed(2)}%  | Memory: ${(childStats.memory / 1024 / 1024).toFixed(2)} MB\n` +
+            `CPU: ${cpuMonitor.getCpuPercent()}% | Memory: ${(mem.rss / 1024 / 1024).toFixed(2)} MB | Heap: ${(mem.heapUsed / 1024 / 1024).toFixed(2)} MB / ${(mem.heapTotal / 1024 / 1024).toFixed(2)} MB\n\n` +
+            `{${childStats.failed ? "red-bg" : "magenta-bg"}}FFmpeg Stream{/${childStats.failed ? "red-bg" : "magenta-bg"}} (${childStats.failed ? "STOPPED" : `PID ${streamProcess.pid}`})\n` +
+            `CPU: ${childStats.cpu.toFixed(2)}% | Memory: ${(childStats.memory / 1024 / 1024).toFixed(2)} MB\n` +
             `\n{cyan-fg}Connected clients:{/cyan-fg} ${clientCount}\n` +
             `{green-fg}Last check:{/green-fg} ${getFormattedTime()}\n`
         );

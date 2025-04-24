@@ -15,13 +15,14 @@
 - `[tab]` : Select screen
 - `[Up] [Down] [PageUp] [PageDown]` : Scroll the log in the selected screen
 
-## 🛜 Forward a port for the http server
+## 🌐 Forward a port for the http server
 - What you set in the config.json file (http_port)
 
 ## 📦 Required softwares:
 - A virtual audio cable mod: Recommended: https://vb-audio.com/Cable/ (or https://vb-audio.com/Voicemeeter/)
 - FFmpeg: https://ffmpeg.org/ (be available in environment variables)
 - NodeJS 
+
 ### NPM modules
 Use `npm install` to install all required module.  
 Used modules:
@@ -63,7 +64,14 @@ ffmpeg -list_devices true -f dshow -i dummy
 }
 ```
 
-# 🪵 Changelog
+# 📝 Changelog
+### 1.3.7.
+- Monitoring updated: Handle childprocess crashes and design improved.
+- FFmpeg crash handler and crash log file added.
+- Logger module: Added log types enum and log file creator.
+- Added tags to package.
+- Updated readme docs and emotes 🌟💘
+
 ### 1.3.6.
 - Added: log / screen scrollback.
 - Screen change with tab.

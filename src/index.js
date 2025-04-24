@@ -4,7 +4,7 @@ import { spawn } from "child_process";
 
 import CONFIG from "../config.json" with { type: "json" };
 
-import { logger } from "./modules/logger.js";
+import { logger, LogTypes, createFFmpegLogFile } from "./modules/logger.js";
 import { monitorUpdater } from "./modules/resources.js";
 import { pushFFmpegLog } from "./modules/screen.js";
 
@@ -32,10 +32,12 @@ if(CONFIG.monitoring.enable_ffmpeg_log) {
     
     streamProcess.on('error', (err) => {
         pushFFmpegLog(`FFmpeg error: ${err.message}`);
+        createFFmpegLogFile();
     });
     
     streamProcess.on('close', (code) => {
         pushFFmpegLog(`FFmpeg stopped, exit code: ${code}`);
+        createFFmpegLogFile();
     });
 }
 
@@ -52,10 +54,10 @@ app.get('/', (req, res) => {
         .audioCodec('copy')
         .format(CONFIG.stream.format)
         .on('start', () => {
-            logger(`Client ${clientInfo} connected: Stream started`, "info");
+            logger(`Client ${clientInfo} connected: Stream started`, LogTypes.INFO);
         })
         .on('error', (err) => {
-            err.message.includes("Output stream closed") ? logger(`Client ${clientInfo} disconnected`, "dc") : logger(`FFmpeg error: ${err.message}`, "error");
+            err.message.includes("Output stream closed") ? logger(`Client ${clientInfo} disconnected`, LogTypes.DISCONNECT) : logger(`FFmpeg error: ${err.message}`, LogTypes.ERROR);
             res.end();
         })
         .pipe(res, { end: true });
@@ -66,6 +68,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(CONFIG.http_port, () => {
-    logger("H.A.L. Streamer v.1.3.6. made by: @mcitomi", "log");
-    logger(`Http server listening at http://localhost:${CONFIG.http_port}/`, "log");
+    logger("H.A.L. Streamer v.1.3.7. made by: @mcitomi", LogTypes.LOG);
+    logger(`Http server listening at http://localhost:${CONFIG.http_port}/`, LogTypes.LOG);
 });
