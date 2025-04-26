@@ -15,7 +15,7 @@
         "screen_max_scrollback": 1000,
         "use_ps_fetch": false,
         "save_main_log" : true,
-        "save_ffmpeg_log" : true,
-        "save_resource_log" : true
+        "save_ffmpeg_log" : false,
+        "save_resource_log" : false
     }
 }

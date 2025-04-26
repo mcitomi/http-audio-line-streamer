@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Live Audio Stream</title>
+</head>
+
+<body>
+    <p>
+        H.A.L. Streamer – WS Stream v.1.0<br>
+        <b><a href="https://mcitomi.hu">www.mcitomi.hu</a></b>
+    </p>
+
+    <button id="startBtn">▶ Start Stream</button>
+    <audio id="audio" controls></audio>
+
+    <script>
+        const audio = document.getElementById('audio');
+        const startBtn = document.getElementById('startBtn');
+        const mediaSource = new MediaSource();
+        let sourceBuffer;
+        let socket;
+        let queue = [];
+
+        audio.volume = 0.2;
+        audio.src = URL.createObjectURL(mediaSource);
+
+        mediaSource.addEventListener('sourceopen', () => {
+            console.log("MediaSource opened.");
+            sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
+
+            sourceBuffer.mode = 'sequence'; // Megelőzi az idő-alapú torzulásokat
+
+            sourceBuffer.addEventListener('updateend', () => {
+                if (queue.length > 0 && !sourceBuffer.updating) {
+                    sourceBuffer.appendBuffer(queue.shift());
+                }
+            });
+        });
+
+        startBtn.addEventListener('click', () => {
+            startBtn.disabled = true;
+
+            socket = new WebSocket(`ws://${location.host}`);
+            socket.binaryType = 'arraybuffer';
+
+            socket.addEventListener('open', () => {
+                console.log("WebSocket connected.");
+                audio.play().catch(err => {
+                    console.error("Autoplay blocked:", err.message);
+                });
+            });
+
+            socket.addEventListener('message', (event) => {
+                const chunk = new Uint8Array(event.data);
+
+                // ha túl sok adat gyűlt össze → dobd el a régieket
+                // console.log(queue.length);
+                
+                if (queue.length > 20) {
+                    console.warn("Buffer overflow, dropping old audio");
+                    queue = [];
+                    if (!sourceBuffer.updating) {
+                        sourceBuffer.appendBuffer(chunk);
+                    } else {
+                        queue.push(chunk);
+                    }
+                } else if (sourceBuffer && !sourceBuffer.updating && queue.length === 0) {
+                    sourceBuffer.appendBuffer(chunk);
+                } else {
+                    queue.push(chunk);
+                }
+            });
+
+            socket.addEventListener('close', () => {
+                console.warn("WebSocket closed.");
+            });
+
+            socket.addEventListener('error', (err) => {
+                console.error("WebSocket error:", err);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -135,3 +135,8 @@ ffmpeg -list_devices true -f dshow -i dummy
 
 💌 *Discord: @mcitomi / https://dc.mcitomi.hu*
 <3
+
+Plans:
+- Kliensek közti szinkronra: Mindenkinek bufferel pl 5 másodpercet, de akinek rosszabb a gépe vagy valami miatt elcsúszna a hang annak kisebb buffer maradjon így ugyan ott járna. (így nem a real time adatfolyamot próbáljuk olvasni). -> idk hogyan lehetne össze syncelni így ennyire
+
+- Spotify lekérés zene appot írni, ami api-t szolágáltat, ebbe az appba meg meg lehessen adni configba egy api url-t amit megjelenít mint zene cím/kép stb a webes lejátszó oldalon. (text contentet adjon csak vissza az api, és azt jelenítse meg)
