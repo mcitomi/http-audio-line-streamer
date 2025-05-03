@@ -3,7 +3,8 @@ import { appendFile } from "node:fs";
 import { join } from "node:path";
 
 import { monitorBox, screen } from "./screen.js";
-import { streamProcess, clientCount } from "../index.js";
+import { clientCount } from "./clients.js";
+import { streamProcess } from "./ffmpeg.js";
 import { getFormattedTime } from "./time.js";
 import { logger, LogTypes } from "./logger.js";
 

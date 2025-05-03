@@ -1,7 +1,8 @@
 {
     "http_port": 8080,
     "stream": {
-        "local_url": "233.1.1.1:9999",
+        "ws_enabled" : true,
+        "http_enabled" : true,
         "audio_line": "CABLE Output (VB-Audio Virtual Cable)",
         "audio_api": "dshow",
         "codec": "libmp3lame",

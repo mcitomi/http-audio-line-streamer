@@ -1,87 +1,36 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Live Audio Stream</title>
+    <title>H.A.L. - Web Player</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 </head>
 
-<body>
-    <p>
-        H.A.L. Streamer – WS Stream v.1.0<br>
-        <b><a href="https://mcitomi.hu">www.mcitomi.hu</a></b>
-    </p>
+<body onload="loadTheme()">
+    <div class="container">
+        <p>
+            H.A.L. Streamer – WS Stream v.1.0<br>
+            <b><a href="https://mcitomi.hu">www.mcitomi.hu</a></b>
+        </p>
 
-    <button id="startBtn">▶ Start Stream</button>
-    <audio id="audio" controls></audio>
+        <button id="startBtn">▶ Start Stream</button>
+        <audio id="audio"></audio>
 
-    <script>
-        const audio = document.getElementById('audio');
-        const startBtn = document.getElementById('startBtn');
-        const mediaSource = new MediaSource();
-        let sourceBuffer;
-        let socket;
-        let queue = [];
+        <div>
+            <label for="vol" class="form-label">Vol:</label>
+            <input type="range" value="20" class="form-range" id="vol" onchange="changeVol(this.value)">
+        </div>
 
-        audio.volume = 0.2;
-        audio.src = URL.createObjectURL(mediaSource);
+        <button onclick="changeTheme()">Theme</button>
+    </div>
 
-        mediaSource.addEventListener('sourceopen', () => {
-            console.log("MediaSource opened.");
-            sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
-
-            sourceBuffer.mode = 'sequence'; // Megelőzi az idő-alapú torzulásokat
-
-            sourceBuffer.addEventListener('updateend', () => {
-                if (queue.length > 0 && !sourceBuffer.updating) {
-                    sourceBuffer.appendBuffer(queue.shift());
-                }
-            });
-        });
-
-        startBtn.addEventListener('click', () => {
-            startBtn.disabled = true;
-
-            socket = new WebSocket(`ws://${location.host}`);
-            socket.binaryType = 'arraybuffer';
-
-            socket.addEventListener('open', () => {
-                console.log("WebSocket connected.");
-                audio.play().catch(err => {
-                    console.error("Autoplay blocked:", err.message);
-                });
-            });
-
-            socket.addEventListener('message', (event) => {
-                const chunk = new Uint8Array(event.data);
-
-                // ha túl sok adat gyűlt össze → dobd el a régieket
-                // console.log(queue.length);
-                
-                if (queue.length > 20) {
-                    console.warn("Buffer overflow, dropping old audio");
-                    queue = [];
-                    if (!sourceBuffer.updating) {
-                        sourceBuffer.appendBuffer(chunk);
-                    } else {
-                        queue.push(chunk);
-                    }
-                } else if (sourceBuffer && !sourceBuffer.updating && queue.length === 0) {
-                    sourceBuffer.appendBuffer(chunk);
-                } else {
-                    queue.push(chunk);
-                }
-            });
-
-            socket.addEventListener('close', () => {
-                console.warn("WebSocket closed.");
-            });
-
-            socket.addEventListener('error', (err) => {
-                console.error("WebSocket error:", err);
-            });
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <script src="/webplayer/player.js"></script>
+    <script src="/webplayer/darkmode.js"></script>
 </body>
 
 </html>

@@ -47,7 +47,8 @@ ffmpeg -list_devices true -f dshow -i dummy
 {
     "http_port": 8080, // The main http server port
     "stream": {
-        "local_url": "233.1.1.1:9999",  // Local UDP multicast audio stream port (just pick a IPv4 multicast address)
+        "ws_enabled" : true,
+        "http_enabled" : true,
         "audio_line": "CABLE Output (VB-Audio Virtual Cable)",  // Your streamable audio input line name
         "audio_api": "dshow",   // Your system audio api, Windows: dshow Linux: pulse or alsa
         "codec": "libmp3lame",  // FFmpeg audio codec (libmp3lame for mp3)
