@@ -4,6 +4,7 @@ import { join } from "node:path";
 
 import { streamProcess } from "./ffmpeg.js";
 import { getFormattedTime } from "./time.js";
+import { logDirPath } from "./logger.js";
 
 import CONFIG from "../../config.json" with { type: "json" };
 
@@ -60,7 +61,7 @@ export const ffmpegLog = blessed.list({
 
 export function pushFFmpegLog(msg) {
     if (CONFIG.monitoring.save_ffmpeg_log) {
-        appendFile(join(process.cwd(), "logs", "ffmpeg-log.txt"), `[${getFormattedTime()}] - ${msg}\n`, (fserr) => {
+        appendFile(join(logDirPath, "ffmpeg-log.txt"), `[${getFormattedTime()}] - ${msg}\n`, (fserr) => {
             if (fserr) {
                 logBox.log(`[${timestamp}] - {red-bg}Error creating ffmpeg-log file!{/red-bg}\n`);
             }

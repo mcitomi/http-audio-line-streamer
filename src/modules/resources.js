@@ -6,7 +6,7 @@ import { monitorBox, screen } from "./screen.js";
 import { clientCount } from "./clients.js";
 import { streamProcess } from "./ffmpeg.js";
 import { getFormattedTime } from "./time.js";
-import { logger, LogTypes } from "./logger.js";
+import { logger, LogTypes, logDirPath } from "./logger.js";
 
 import CONFIG from "../../config.json" with { type: "json" };
 
@@ -39,7 +39,7 @@ async function checkStats(cpuMonitor) {
         );
 
         if (CONFIG.monitoring.save_resource_log) {
-            appendFile(join(process.cwd(), "logs", `resource-log.txt`), `\n[${getFormattedTime()}]\n` +
+            appendFile(join(logDirPath, `resource-log.txt`), `\n[${getFormattedTime()}]\n` +
                 `Main process and HTTP server (PID ${process.pid})\n` +
                 `CPU: ${cpuMonitor.getCpuPercent()}% | Memory: ${(mem.rss / 1024 / 1024).toFixed(2)} MB | Heap: ${(mem.heapUsed / 1024 / 1024).toFixed(2)} MB / ${(mem.heapTotal / 1024 / 1024).toFixed(2)} MB\n\n` +
                 `FFmpeg Stream (${childStats.failed ? "STOPPED" : `PID ${streamProcess.pid}`})\n` +

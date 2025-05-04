@@ -1,4 +1,4 @@
-import { writeFile, appendFile, existsSync, mkdirSync } from "node:fs";
+import { writeFile, appendFile, existsSync, mkdirSync, mkdir } from "node:fs";
 import { join } from "node:path";
 import { logBox, ffmpegLog } from "./screen.js";
 import { getFormattedTime } from "./time.js";
@@ -12,16 +12,18 @@ export const LogTypes = {
     DISCONNECT: "dc"
 }
 
-if(!existsSync(join(process.cwd(), "logs"))) {
-    mkdirSync(join(process.cwd(), "logs"));
+export const logDirPath = join(import.meta.dirname, "..", "..", "logs");
+
+if(!existsSync(logDirPath)) {
+    mkdirSync(logDirPath);
 }
 
 export function logger(text, type) {
     const timestamp = getFormattedTime();
     if (CONFIG.monitoring.save_main_log) {
-        appendFile(join(process.cwd(), "logs", "log.txt"), `[${getFormattedTime()}] - ${text}\n`, (fserr) => {
+        appendFile(join(logDirPath, "log.txt"), `[${getFormattedTime()}] - ${text}\n`, (fserr) => {
             if (fserr) {
-                logBox.log(`[${timestamp}] - {red-bg}Error creating log file!{/red-bg}\n`);
+                logBox.log(`[${timestamp}] - {red-bg}Error creating log file!{/red-bg} ${fserr.message}\n`);
             }
         });
     }
