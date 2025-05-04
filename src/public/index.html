@@ -11,7 +11,7 @@
 <body onload="loadTheme()">
     <div class="container">
         <p>
-            H.A.L. Streamer – WS Stream v.1.0<br>
+            H.A.L. Streamer v.1.4.0 - Websocket Web Player Sample<br>
             <b><a href="https://mcitomi.hu">www.mcitomi.hu</a></b>
         </p>
 
@@ -19,8 +19,8 @@
         <audio id="audio"></audio>
 
         <div>
-            <label for="vol" class="form-label">Vol:</label>
-            <input type="range" value="20" class="form-range" id="vol" onchange="changeVol(this.value)">
+            <label for="vol" class="form-label" id="vollab">Vol:</label>
+            <input type="range" class="form-range" id="vol" oninput="changeVol(this.value)">
         </div>
 
         <button onclick="changeTheme()">Theme</button>

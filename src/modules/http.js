@@ -53,13 +53,7 @@ const server = app.listen(CONFIG.http_port, () => {
 });
 
 if(CONFIG.stream.ws_enabled) {
-    app.use("/webplayer", (req, res, next) => {
-        if (req.url == "/" || req.url == "/webplayer") {
-            logger(`Client ${req.headers['user-agent']} - ${req.headers['x-forwarded-for'] || req.socket.remoteAddress} connected`, LogTypes.INFO);
-        }
-    
-        next();
-    }, Express.static("src/public"));
+    app.use("/webplayer", Express.static("src/public"));
 
     wss(server, streamProcess);
 }

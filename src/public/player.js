@@ -1,12 +1,19 @@
 const audio = document.getElementById('audio');
+const vol = document.getElementById('vol');
+const vollab = document.getElementById('vollab');
 const startBtn = document.getElementById('startBtn');
 const mediaSource = new MediaSource();
 let sourceBuffer;
 let socket;
 let queue = [];
 
-audio.volume = 0.2;
 audio.src = URL.createObjectURL(mediaSource);
+
+document.addEventListener("DOMContentLoaded", () => {
+    audio.volume = parseFloat(localStorage.getItem("vol")) || 0.2;
+    vol.value = parseFloat(localStorage.getItem("vol")) * 100 || "20";
+    vollab.textContent = `Vol: ${parseFloat(localStorage.getItem("vol")) * 100 || "20"}%`;
+});
 
 mediaSource.addEventListener('sourceopen', () => {
     console.log("MediaSource opened.");
@@ -63,4 +70,26 @@ startBtn.addEventListener('click', () => {
 
 function changeVol(value) {
     audio.volume = value / 100;
+    localStorage.setItem("vol", `${value / 100}`);
+    vollab.textContent = `Vol: ${value}%`;
 }
+
+vol.addEventListener('wheel', function (event) {
+    event.preventDefault();
+
+    let newValue = parseInt(this.value);
+
+    if (event.deltaY < 0) {
+        newValue += 1;
+    } else {
+        newValue -= 1;
+    }
+
+    if (newValue < 0 || newValue > 100) {
+        return;
+    };
+
+    this.value = newValue;
+
+    changeVol(newValue);
+});

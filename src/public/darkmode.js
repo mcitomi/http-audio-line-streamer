@@ -13,7 +13,9 @@ function loadTheme() {
 
     if (darkmode == "true") {
         document.getElementsByTagName("body")[0].style.backgroundColor = "#222";
+        document.getElementsByTagName("body")[0].style.color = "white";
     } else {
         document.getElementsByTagName("body")[0].style.backgroundColor = "#f2f3f4";
+        document.getElementsByTagName("body")[0].style.color = "black";
     }
 }

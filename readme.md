@@ -1,5 +1,5 @@
 # Stream your audio line over HTTP 💫
-​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP. The project aims to provide an easy-to-use and configurable solution for streaming audio data.
+​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP or / and websocket. The project aims to provide an easy-to-use and configurable solution for streaming audio data.
 
 <img src="https://imgur.com/ES5kpwZ.png">
 
@@ -28,8 +28,8 @@ Use `npm install` to install all required module.
 Used modules:
 - blessed
 - express
-- fluent-ffmpeg
 - pidusage
+- ws
 
 ## 🔊 Playback:
 - Use VLC and "Open network stream" and paste your url or open your http server url in the browser (doesn't always work, Edge usually supports it).
@@ -47,8 +47,8 @@ ffmpeg -list_devices true -f dshow -i dummy
 {
     "http_port": 8080, // The main http server port
     "stream": {
-        "ws_enabled" : true,
-        "http_enabled" : true,
+        "ws_enabled" : true,    // Enable websocket stream and webpage
+        "http_enabled" : true,  // Enable the HTTP stream
         "audio_line": "CABLE Output (VB-Audio Virtual Cable)",  // Your streamable audio input line name
         "audio_api": "dshow",   // Your system audio api, Windows: dshow Linux: pulse or alsa
         "codec": "libmp3lame",  // FFmpeg audio codec (libmp3lame for mp3)
@@ -69,6 +69,20 @@ ffmpeg -list_devices true -f dshow -i dummy
 ```
 
 # 📝 Changelog
+### 1.4.0.
+- Removed UDP multicast -> using process pipes.
+- Code Refactor: FFmpeg, client counter, HTTP and WC have been placed in separate modules.
+- Websocket Stream option added to reduce delay.
+- A dedicated web player has been created for the websocket stream, which can be accessed by typing https://localhost:8080/, which will redirect to https://localhost:8080/webplayer/ if you open it in a browser instead of VLC. (The HTTP stream is still available through VLC at https://localhost:8080/).
+- The web player: uses vanilla javascript and html, saves volume and theme settings to local storage (the plan is to create a simple react-based application for it in the future, the current one is just a test/sample)
+- Removed fluent-ffmpeg module, using only native FFmpeg as child process.
+
+#### Plans:
+- Improved synchronization between clients with buffer size.
+- Volume control from another client via client code (desktop pc audio from mobile).
+- Creating a React-based web client to display dynamic content (song titles, images, music history etc. based on https://github.com/mcitomi/spotify-song-display-api ).
+- Spotify / Spicetify mod integration (search bar, song request, queue).
+
 ### 1.3.8.
 - Ability to log everything to /logs directory. ✨ (main screen, FFmpeg console and resource monitor).
 
@@ -134,10 +148,14 @@ ffmpeg -list_devices true -f dshow -i dummy
 - A basic http server.
 - Bult in FFmpeg stream method with Node exec.
 
-💌 *Discord: @mcitomi / https://dc.mcitomi.hu*
+# 🍻 About:
+### Dev(s): 
+- mcitomi
+
+  *Discord: @mcitomi / https://dc.mcitomi.hu*
+
+### Testers:
+- Decsi01
+- gyapjashabcukor
+
 <3
-
-Plans:
-- Kliensek közti szinkronra: Mindenkinek bufferel pl 5 másodpercet, de akinek rosszabb a gépe vagy valami miatt elcsúszna a hang annak kisebb buffer maradjon így ugyan ott járna. (így nem a real time adatfolyamot próbáljuk olvasni). -> idk hogyan lehetne össze syncelni így ennyire
-
-- Spotify lekérés zene appot írni, ami api-t szolágáltat, ebbe az appba meg meg lehessen adni configba egy api url-t amit megjelenít mint zene cím/kép stb a webes lejátszó oldalon. (text contentet adjon csak vissza az api, és azt jelenítse meg)

@@ -14,6 +14,8 @@ export function wss(server, streamProcess) {
     
         const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress);
         newClient(true);
+
+        logger(`Client ${req.headers['user-agent']} - ${ip} connected`, LogTypes.INFO);
     
         streamProcess.stdout.on("data", onData);
     
