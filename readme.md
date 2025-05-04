@@ -32,9 +32,9 @@ Used modules:
 - ws
 
 ## 🔊 Playback:
-- Use VLC and "Open network stream" and paste your url or open your http server url in the browser (doesn't always work, Edge usually supports it).
+- Use VLC and "Open network stream" and paste your url or open your http server url in the browser and enjoy the websocket stream (if enabled in your config :)
 - Your url is: http://localhost:{http_port} // for example http://localhost:8080/
-- To reduce latency, set the "network-caching" setting in VLC's settings to a lower value, e.g. 200ms.
+- To reduce latency, set the "network-caching" setting in VLC's settings to a lower value, e.g. 200ms. (usually the websocket is faster).
 
 ## 👨‍💻 Config:
 Use this command to list your audio devices which able to stream:
@@ -82,6 +82,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 - Volume control from another client via client code (desktop pc audio from mobile).
 - Creating a React-based web client to display dynamic content (song titles, images, music history etc. based on https://github.com/mcitomi/spotify-song-display-api ).
 - Spotify / Spicetify mod integration (search bar, song request, queue).
+- Display statistics: number of stream listeners, client latency and IP address, server cpu and memory load
 
 ### 1.3.8.
 - Ability to log everything to /logs directory. ✨ (main screen, FFmpeg console and resource monitor).
