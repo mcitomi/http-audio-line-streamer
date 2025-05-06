@@ -69,6 +69,15 @@ export function wss(server, streamProcess) {
 async function updateMeta() {
     try {
         const response = await fetch(CONFIG.meta_infos.api_url);
+
+        if(response.status == 404) {
+            if(lastTitle) {
+                logger("Not playing anything at the moment", LogTypes.INFO);
+                lastTitle = null;
+            }
+            return;
+        }
+
         if (!response.ok) throw new Error("Invalid response");
 
         const body = await response.json();

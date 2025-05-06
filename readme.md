@@ -76,6 +76,8 @@ ffmpeg -list_devices true -f dshow -i dummy
     }
 }
 ```
+- Make sure the metadata server configuration and paths are valid, and the API responds with a 404 status if a song doesn't play or if no new songs are found.
+
 
 # 📝 Changelog
 ### 1.4.1.
