@@ -18,5 +18,14 @@
         "save_main_log" : true,
         "save_ffmpeg_log" : false,
         "save_resource_log" : false
+    },
+    "meta_infos" : {
+        "enabled" : true,
+        "api_url" : "http://localhost:8181/api/current",
+        "title_path" : "item.name",
+        "author_path" : "item.artists[0].name",
+        "album_pic_path" : "item.album.images[0].url",
+        "refresh_interval" : 3,
+        "max_history_length" : 50
     }
 }

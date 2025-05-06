@@ -53,7 +53,7 @@ const server = app.listen(CONFIG.http_port, () => {
 });
 
 if(CONFIG.stream.ws_enabled) {
-    app.use("/webplayer", Express.static("src/public"));
+    app.use("/webplayer", Express.static("frontend/build"));
 
     wss(server, streamProcess);
 }

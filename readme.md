@@ -1,5 +1,5 @@
 # Stream your audio line over HTTP 💫
-​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP or / and websocket. The project aims to provide an easy-to-use and configurable solution for streaming audio data.
+​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP or / and websocket. The project aims to provide an easy-to-use and configurable solution for streaming audio data and optional song metadata over websocket.
 
 <img src="https://imgur.com/ES5kpwZ.png">
 
@@ -64,11 +64,35 @@ ffmpeg -list_devices true -f dshow -i dummy
         "save_main_log" : true,    // Disable / Enable to save the main "Log" screen values to a log file
         "save_ffmpeg_log" : false,   // Disable / Enable to save the "FFmpeg Log" screen values to a log file
         "save_resource_log" : false  // Disable / Enable to save resource usage to a log file
+    },
+    "meta_infos" : {
+        "enabled" : true,   // Enable to get meta informations from frontend
+        "api_url" : "http://localhost:8181/api/current",    // Your api server link (for example: https://github.com/mcitomi/spotify-song-display-api ).
+        "title_path" : "item.name", // The title location inside your api (example: https://github.com/mcitomi/spotify-song-display-api/blob/main/src/types/spotifyCurrentPlaying.d.ts ).
+        "author_path" : "item.artists[0].name", // Author's name location
+        "album_pic_path" : "item.album.images[0].url",  // Album / song pic url location
+        "refresh_interval" : 3, // The interval when the application calls the API in seconds.
+        "max_history_length" : 50   // Maximum length of music history.
     }
 }
 ```
 
 # 📝 Changelog
+### 1.4.1.
+- Impressive frontend update: React based web application added to play websocket stream.
+- Config settings added for frontend song display.
+- Song metadata broadcaster added to backend + websocket updated.
+
+<img src="https://imgur.com/8W5IDS4.png">
+
+#### Plans:
+- Improved synchronization between clients with buffer size.
+- Volume control from another client via client code (desktop pc audio from mobile).
+- Spotify / Spicetify mod integration (search bar, song request, queue).
+- Display statistics in frontend: number of stream listeners, client latency and IP address, server cpu and memory load.
+- Darkmode / color themes.
+- Music progress bar in frontend.
+
 ### 1.4.0.
 - Removed UDP multicast -> using process pipes.
 - Code Refactor: FFmpeg, client counter, HTTP and WC have been placed in separate modules.
@@ -76,13 +100,6 @@ ffmpeg -list_devices true -f dshow -i dummy
 - A dedicated web player has been created for the websocket stream, which can be accessed by typing https://localhost:8080/, which will redirect to https://localhost:8080/webplayer/ if you open it in a browser instead of VLC. (The HTTP stream is still available through VLC at https://localhost:8080/).
 - The web player: uses vanilla javascript and html, saves volume and theme settings to local storage (the plan is to create a simple react-based application for it in the future, the current one is just a test/sample)
 - Removed fluent-ffmpeg module, using only native FFmpeg as child process.
-
-#### Plans:
-- Improved synchronization between clients with buffer size.
-- Volume control from another client via client code (desktop pc audio from mobile).
-- Creating a React-based web client to display dynamic content (song titles, images, music history etc. based on https://github.com/mcitomi/spotify-song-display-api ).
-- Spotify / Spicetify mod integration (search bar, song request, queue).
-- Display statistics: number of stream listeners, client latency and IP address, server cpu and memory load
 
 ### 1.3.8.
 - Ability to log everything to /logs directory. ✨ (main screen, FFmpeg console and resource monitor).
@@ -158,5 +175,6 @@ ffmpeg -list_devices true -f dshow -i dummy
 ### Testers:
 - Decsi01
 - gyapjashabcukor
+- kiwisfagyi <small>~ alterlany</small>
 
 <3
