@@ -141,10 +141,10 @@ export default function AudioStream() {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: meta.title,
-                artist: meta.author,
+                artist: meta.author.join(", "),
                 album: "H.A.L. Streamer by mcitomi",
                 artwork: [
-                    { src: meta.img, sizes: "512x512", type: "image/jpeg" },
+                    { src: meta.img[0], sizes: "512x512", type: "image/jpeg" },
                 ]
             });
 
