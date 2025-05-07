@@ -1,7 +1,11 @@
 # Stream your audio line over HTTP 💫
 ​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP or / and websocket. The project aims to provide an easy-to-use and configurable solution for streaming audio data and optional song metadata over websocket.
 
+**Backend console:**
 <img src="https://imgur.com/ES5kpwZ.png">
+
+**Frontend webpage:**
+<img src="https://imgur.com/qGAHT8U.png">
 
 ## 🚀 Quickstart:
 - Clone this repo to your computer or download it.
@@ -71,29 +75,41 @@ ffmpeg -list_devices true -f dshow -i dummy
         "title_path" : "item.name", // The title location inside your api (example: https://github.com/mcitomi/spotify-song-display-api/blob/main/src/types/spotifyCurrentPlaying.d.ts ).
         "author_path" : "item.artists[0].name", // Author's name location
         "album_pic_path" : "item.album.images[0].url",  // Album / song pic url location
+        "song_urL_path" : "item.external_urls.spotify", // Song url location
+        "artist_url_path" : "item.artists[0].external_urls.spotify",    // Artist url location
+        "song_duration_path" : "item.duration_ms",  // Song duration in miliseconds.
+        "song_progress_path" : "progress_ms",   // Song actual progress in miliseconds.
         "refresh_interval" : 3, // The interval when the application calls the API in seconds.
         "max_history_length" : 50   // Maximum length of music history.
     }
 }
 ```
 - Make sure the metadata server configuration and paths are valid, and the API responds with a 404 status if a song doesn't play or if no new songs are found.
+- If you don't want to use any of the settings, just set it to Null or Undefined.
+- The settings in the configuration are set for the https://github.com/mcitomi/spotify-song-display-api application, if you stream audio from Spotify, you can use it too!
 
 
 # 📝 Changelog
-### 1.4.1.
-- Impressive frontend update: React based web application added to play websocket stream.
-- Config settings added for frontend song display.
-- Song metadata broadcaster added to backend + websocket updated.
-
-<img src="https://imgur.com/8W5IDS4.png">
-
 #### Plans:
-- Improved synchronization between clients with buffer size.
+- Improve synchronization between clients with buffer size.
 - Volume control from another client via client code (desktop pc audio from mobile).
 - Spotify / Spicetify mod integration (search bar, song request, queue).
 - Display statistics in frontend: number of stream listeners, client latency and IP address, server cpu and memory load.
 - Darkmode / color themes.
-- Music progress bar in frontend.
+- Auto reconnect.
+
+### 1.4.2.
+- Link embedding in queue, album cover and title.
+- Queue bugfixes.
+- Song progress bar added!
+- Volume bar redesigned.
+<img src="https://imgur.com/qGAHT8U.png">
+
+### 1.4.1.
+- Impressive frontend update: React based web application added to play websocket stream.
+- Config settings added for frontend song display.
+- Song metadata broadcaster added to backend + websocket updated.
+<img src="https://imgur.com/8W5IDS4.png">
 
 ### 1.4.0.
 - Removed UDP multicast -> using process pipes.

@@ -16,6 +16,10 @@ body{
     color: rgb(184, 183, 183);
 }
 
+.artistColor:hover {
+    text-decoration: underline;
+}
+
 .songImg {
     height: 50%;
 }
@@ -26,4 +30,46 @@ body{
     padding: 30px;
     margin-top: 4px;
     margin-bottom: 4px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.songTitle {
+    color: white;
+}
+
+.songTitle:hover {
+    text-decoration: underline;
+}
+
+.progressBar {
+    margin-left: auto;
+    margin-right: auto;
+    width: 250px;
+    height: 3px;
+}
+
+.progressSec {
+    float: inline-start;
+}
+
+.durationSec {
+    float: inline-end;
+}
+
+.volumeLabel {
+    margin-left: auto;
+    margin-right: auto;
+    width: 250px;
+    margin-bottom: -15px;
+}
+
+.volumeBar {
+    height: 3px;
+}
+
+.volumeBar:hover, .volumeLabel:hover {
+    cursor:ew-resize;
 }

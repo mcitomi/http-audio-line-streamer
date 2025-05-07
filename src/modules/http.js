@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 })
 
 const server = app.listen(CONFIG.http_port, () => {
-    logger("H.A.L. Streamer v.1.4.0. made by: @mcitomi", LogTypes.LOG);
+    logger("H.A.L. Streamer v.1.4.2. made by: @mcitomi", LogTypes.LOG);
     logger(`HTTP server listening at http://localhost:${CONFIG.http_port}/`, LogTypes.LOG);
 });
 

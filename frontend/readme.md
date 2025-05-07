@@ -1,5 +1,9 @@
-npm init -y
-npm i react react-scripts react-dom bootstrap react-bootstrap
+React project created using:
 
-to run react project: npm start
-build: npm run build
+`npm init -y`
+
+`npm i react react-scripts react-dom bootstrap react-bootstrap`
+
+to run React project: `npm start`
+
+build: `npm run build`

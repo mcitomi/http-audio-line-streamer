@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Image, Button, Badge, ListGroup } from "react-bootstrap";
+import { Container, Row, Col, Image, Button, Badge, ListGroup, ProgressBar } from "react-bootstrap";
 import { motion, AnimatePresence } from "framer-motion";
 
 import "./styles/main.css";
@@ -13,6 +13,11 @@ export default function AudioStream() {
 
     const [isPlaying, setIsPlaying] = useState(false);
 
+    const [state, setState] = useState({
+        progress: "0:00",
+        duration: "0:00"
+    });
+
     const [volume, setVolume] = useState(() => {
         return parseFloat(localStorage.getItem("vol")) || 0.2;
     });
@@ -25,7 +30,13 @@ export default function AudioStream() {
         title: "H.A.L. Streamer",
         author: "Built in React",
         img: "/webplayer/assets/blank.jpg",
-        playedAt: 0
+        playedAt: 0,
+        url: "https://mcitomi.hu/",
+        artistUrl: "https://mcitomi.hu/",
+        durationMs: 0,
+        progressMs: 0,
+        percent: 0,
+        connectionDate: 0
     });
 
     const [history, setHistory] = useState([]);
@@ -70,7 +81,13 @@ export default function AudioStream() {
                 setMeta({
                     title: data.metaDatas.title || "Unknown",
                     author: data.metaDatas.author || "www.mcitomi.hu",
-                    img: data.metaDatas.img || "/assets/blank.jpg"
+                    img: data.metaDatas.img || "/assets/blank.jpg",
+                    url: data.metaDatas.url || "https://mcitomi.hu/",
+                    artistUrl: data.metaDatas.artistUrl || "https://mcitomi.hu/",
+                    durationMs: data.metaDatas.durationMs || 0,
+                    progressMs: data.metaDatas.progressMs + (data.connectionDate - data.metaDatas.playedAt) || 0,
+                    playedAt: data.metaDatas.playedAt,
+                    connectionDate: data.connectionDate
                 });
                 setHistory(data.history);
             } catch (err) {
@@ -82,10 +99,28 @@ export default function AudioStream() {
             console.error("Metadata WebSocket error:", err);
         };
 
+        const interval = setInterval(() => {
+            setMeta(prev => {
+                const newProgress = prev.progressMs + 1000;
+                return {
+                    ...prev,
+                    progressMs: Math.min(newProgress, prev.durationMs),
+                    percent: Math.floor(prev.durationMs > 0 ? (newProgress / prev.durationMs) * 100 : 0)
+                };
+            });
+        }, 1000);
+
         return () => {
             ws.close();
+            clearInterval(interval);
         };
     }, []);
+
+    function millisToMinutesAndSeconds(millis) {
+        const minutes = Math.floor(millis / 60000);
+        const seconds = Math.floor((millis % 60000) / 1000);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
 
     useEffect(() => {
         if ('mediaSession' in navigator) {
@@ -109,6 +144,11 @@ export default function AudioStream() {
                 handleStop();
             });
         }
+
+        setState({
+            duration: millisToMinutesAndSeconds(meta.durationMs),
+            progress: millisToMinutesAndSeconds(meta.progressMs)
+        });
     }, [meta]);
 
     const handleStart = () => {
@@ -231,28 +271,39 @@ export default function AudioStream() {
                                     className="text-center"
                                 >
                                     <Image src={meta.img} width={250} height={250} rounded />
-                                    <h4 className="my-3">{meta.title}</h4>
-                                    <h5 className="artistColor">{meta.author}</h5>
+                                    <a href={meta.url} target="_blank" rel="noopener noreferrer">
+                                        <h4 className="my-3 songTitle">{meta.title}</h4>
+                                    </a>
+                                    <a href={meta.artistUrl} target="_blank" rel="noopener noreferrer">
+                                        <h5 className="artistColor">{meta.author}</h5>
+                                    </a>
+                                    <div>
+                                        <p className="progressBar">
+                                            <span className="progressSec">{state.progress}</span>
+                                            <span className="durationSec">{state.duration}</span>
+                                        </p>
+                                        <ProgressBar className="progressBar my-3" now={meta.percent} />
+                                    </div>
                                 </motion.div>
                             </AnimatePresence>
-                        </div>
-                        <div className="my-3">
-                            <input
-                                id="volume"
-                                type="range"
-                                min="0"
-                                max="100"
-                                value={Math.round(volume * 100)}
-                                onChange={handleVolumeChange}
-                                className="w250"
-                            />
-                            <br />
-                            <p>Vol: {Math.round(volume * 100)}%</p>
                         </div>
                         <div>
                             <Button className="m-2 btnsize" onClick={handleStart} disabled={isPlaying}>Start</Button>
                             <Button className="m-2 btnsize" variant="danger" onClick={handleStop} disabled={!isPlaying}>Disconnect</Button>
                         </div>
+                        <div className="my-3" id="volume">
+                            <p className="volumeLabel">Volume: {Math.round(volume * 100)}%</p>
+                           
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={Math.round(volume * 100)}
+                                onChange={handleVolumeChange}
+                                className="w250 volumeBar"
+                            />
+                        </div>
+
                     </div>
                 </Col>
                 <Col>
@@ -270,8 +321,12 @@ export default function AudioStream() {
                                 >
                                     <Image src={song.img} width={50} rounded />
                                     <div className="ms-2 me-auto">
-                                        <div className="fw-bold">{song.title}</div>
-                                        <span className="artistColor">{song.author}</span>
+                                        <a href={song.url} target="_blank" rel="noopener noreferrer">
+                                            <div className="fw-bold songTitle">{song.title}</div>
+                                        </a>
+                                        <a href={song.artistUrl} target="_blank" rel="noopener noreferrer">
+                                            <span className="artistColor">{song.author}</span>
+                                        </a>
                                     </div>
                                     <Badge bg="dark" className="artistColor" pill>
                                         {new Date(song.playedAt).toLocaleString(navigator.language || navigator.browserLanguage)}

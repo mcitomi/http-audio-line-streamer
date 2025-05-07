@@ -8,7 +8,11 @@ var metaDatas = {
     title: "H.A.L. Stream",
     author: "www.mcitomi.hu",
     img: "/webplayer/assets/blank.jpg",
-    playedAt: Date.now()
+    playedAt: Date.now(),
+    url: "https://mcitomi.hu/",
+    artistUrl: "https://mcitomi.hu/",
+    durationMs: 0,
+    progressMs: 0
 };
 
 const history = [];
@@ -52,7 +56,7 @@ export function wss(server, streamProcess) {
                 }
                 metadataClients.add(ws);
 
-                ws.send(JSON.stringify({metaDatas, history}));
+                ws.send(JSON.stringify({metaDatas, history, connectionDate: Date.now()}));
 
                 ws.on("close", () => {
                     metadataClients.delete(ws);
@@ -87,7 +91,7 @@ async function updateMeta() {
             lastTitle = newTitle;
 
             if (history.length >= CONFIG.meta_infos.max_history_length) {
-                history.shift();
+                history.pop();
             }
             history.unshift({ ...metaDatas });
 
@@ -95,6 +99,10 @@ async function updateMeta() {
             metaDatas.author = getByPath(body, CONFIG.meta_infos.author_path);
             metaDatas.img = getByPath(body, CONFIG.meta_infos.album_pic_path);
             metaDatas.playedAt = Date.now();
+            metaDatas.url = getByPath(body, CONFIG.meta_infos.song_urL_path);
+            metaDatas.artistUrl = getByPath(body, CONFIG.meta_infos.artist_url_path);
+            metaDatas.durationMs = getByPath(body, CONFIG.meta_infos.song_duration_path);
+            metaDatas.progressMs = getByPath(body, CONFIG.meta_infos.song_progress_path);
 
             broadcastMetadata();
         }
@@ -106,7 +114,7 @@ async function updateMeta() {
 function broadcastMetadata() {
     for (const client of metadataClients) {
         if (client.readyState === client.OPEN) {
-            client.send(JSON.stringify({metaDatas, history}));
+            client.send(JSON.stringify({metaDatas, history, connectionDate: Date.now()}));
         }
     }
 }
