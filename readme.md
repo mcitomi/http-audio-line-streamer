@@ -111,6 +111,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 - Supports multiple artist display from array (api).
 - Soundbuffer updating improved.
 - Favicon added! 
+- HTML meta tags added.
 
 ### 1.4.2.
 - Link embedding in queue, album cover and title.
