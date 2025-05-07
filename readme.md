@@ -73,10 +73,10 @@ ffmpeg -list_devices true -f dshow -i dummy
         "enabled" : true,   // Enable to get meta informations from frontend
         "api_url" : "http://localhost:8181/api/current",    // Your api server link (for example: https://github.com/mcitomi/spotify-song-display-api ).
         "title_path" : "item.name", // The title location inside your api (example: https://github.com/mcitomi/spotify-song-display-api/blob/main/src/types/spotifyCurrentPlaying.d.ts ).
-        "author_path" : "item.artists[0].name", // Author's name location
-        "album_pic_path" : "item.album.images[0].url",  // Album / song pic url location
+        "author_path" : "item.artists[].name", // Author's name location
+        "album_pic_path" : "item.album.images[].url",  // Album / song pic url location
         "song_urL_path" : "item.external_urls.spotify", // Song url location
-        "artist_url_path" : "item.artists[0].external_urls.spotify",    // Artist url location
+        "artist_url_path" : "item.artists[].external_urls.spotify",    // Artist url location
         "song_duration_path" : "item.duration_ms",  // Song duration in miliseconds.
         "song_progress_path" : "progress_ms",   // Song actual progress in miliseconds.
         "refresh_interval" : 3, // The interval when the application calls the API in seconds.
@@ -87,7 +87,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 - Make sure the metadata server configuration and paths are valid, and the API responds with a 404 status if a song doesn't play or if no new songs are found.
 - If you don't want to use any of the settings, just set it to Null or Undefined.
 - The settings in the configuration are set for the https://github.com/mcitomi/spotify-song-display-api application, if you stream audio from Spotify, you can use it too!
-
+- As shown in the example configuration, the server can handle multiple artists, i.e. arrays. (In the case of frontend artists, it displays all of them, and among the images, it selects 0 as high resolution, 2 as low resolution, if there is only one image, it uses it everywhere).
 
 # 📝 Changelog
 #### Plans:
@@ -97,6 +97,19 @@ ffmpeg -list_devices true -f dshow -i dummy
 - Display statistics in frontend: number of stream listeners, client latency and IP address, server cpu and memory load.
 - Darkmode / color themes.
 - Auto reconnect.
+
+### 1.4.3.
+- Delay setting added (manipulate the buffer size)! 
+    - Realtime 
+    - Low 
+    - Medium (Default)
+    - High
+    - Epic
+- The delay setting is automatically saved to local storage and loaded when the page is opened.
+- (You can set a custom buffer size in localStorage).
+- Supports multiple artist display from array (api).
+- Soundbuffer updating improved.
+- Favicon added! 
 
 ### 1.4.2.
 - Link embedding in queue, album cover and title.
@@ -190,9 +203,11 @@ ffmpeg -list_devices true -f dshow -i dummy
 
   *Discord: @mcitomi / https://dc.mcitomi.hu*
 
+### Artist / Designer:
+- gyapjashabcukor
+
 ### Testers:
 - Decsi01
-- gyapjashabcukor
 - kiwisfagyi <small>~ alterlany</small>
 
 <3

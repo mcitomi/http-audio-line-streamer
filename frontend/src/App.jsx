@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Image, Button, Badge, ListGroup, ProgressBar } from "react-bootstrap";
 import { motion, AnimatePresence } from "framer-motion";
 
+import DelaySelector from "./components/DelaySelector.jsx";
+
 import "./styles/main.css";
 
 export default function AudioStream() {
@@ -11,7 +13,12 @@ export default function AudioStream() {
     const queueRef = useRef([]);
     const audioRef = useRef(null);
 
+
     const [isPlaying, setIsPlaying] = useState(false);
+
+    const [queueBuffer, setQueueBuffer] = useState(250);
+
+    const queueBufferRef = useRef(queueBuffer);
 
     const [state, setState] = useState({
         progress: "0:00",
@@ -28,11 +35,11 @@ export default function AudioStream() {
 
     const [meta, setMeta] = useState({
         title: "H.A.L. Streamer",
-        author: "Built in React",
-        img: "/webplayer/assets/blank.jpg",
+        author: ["Built in React"],
+        img: ["/webplayer/assets/blank.jpg"],
         playedAt: 0,
         url: "https://mcitomi.hu/",
-        artistUrl: "https://mcitomi.hu/",
+        artistUrl: ["https://mcitomi.hu/"],
         durationMs: 0,
         progressMs: 0,
         percent: 0,
@@ -40,6 +47,15 @@ export default function AudioStream() {
     });
 
     const [history, setHistory] = useState([]);
+
+    function setStreamDelay(size) {
+        console.log(`New buffer size set: ${size}`);
+        setQueueBuffer(size);
+    }
+
+    useEffect(() => {
+        queueBufferRef.current = queueBuffer;
+    }, [queueBuffer]);
 
     useEffect(() => {
         const mediaSource = new MediaSource();
@@ -56,7 +72,6 @@ export default function AudioStream() {
                 if (q.length > 0 && !sb.updating) {
                     sb.appendBuffer(q.shift());
                 }
-
             });
         });
 
@@ -80,10 +95,10 @@ export default function AudioStream() {
                 const data = JSON.parse(event.data);
                 setMeta({
                     title: data.metaDatas.title || "Unknown",
-                    author: data.metaDatas.author || "www.mcitomi.hu",
-                    img: data.metaDatas.img || "/assets/blank.jpg",
+                    author: data.metaDatas.author || ["www.mcitomi.hu"],
+                    img: data.metaDatas.img || ["/assets/blank.jpg"],
                     url: data.metaDatas.url || "https://mcitomi.hu/",
-                    artistUrl: data.metaDatas.artistUrl || "https://mcitomi.hu/",
+                    artistUrl: data.metaDatas.artistUrl || ["https://mcitomi.hu/"],
                     durationMs: data.metaDatas.durationMs || 0,
                     progressMs: data.metaDatas.progressMs + (data.connectionDate - data.metaDatas.playedAt) || 0,
                     playedAt: data.metaDatas.playedAt,
@@ -190,6 +205,8 @@ export default function AudioStream() {
             });
         });
 
+        console.log(`Queue buffer size: ${queueBuffer}`);
+
         socket.addEventListener('message', (event) => {
             const chunk = new Uint8Array(event.data);
             const q = queueRef.current;
@@ -197,18 +214,12 @@ export default function AudioStream() {
 
             if (!sb) return;
 
-            if (q.length > 20) {
-                console.warn("Buffer overflow, dropping old audio");
-                queueRef.current = [];
-                if (!sb.updating) {
-                    sb.appendBuffer(chunk);
-                } else {
-                    queueRef.current.push(chunk);
-                }
-            } else if (!sb.updating && q.length === 0) {
+            if (!sb.updating && q.length === 0) {
                 sb.appendBuffer(chunk);
-            } else {
+            } else if (q.length < queueBufferRef.current) {
                 q.push(chunk);
+            } else {
+                console.warn("Queue is full. Dropping incoming chunk.");
             }
         });
 
@@ -263,20 +274,30 @@ export default function AudioStream() {
                         <div className="songImg">
                             <AnimatePresence mode="wait">
                                 <motion.div
-                                    key={meta.img}
+                                    key={meta.img[0]}
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.6 }}
                                     className="text-center"
                                 >
-                                    <Image src={meta.img} width={250} height={250} rounded />
+                                    <Image src={meta.img[0]} width={250} height={250} rounded />
                                     <a href={meta.url} target="_blank" rel="noopener noreferrer">
                                         <h4 className="my-3 songTitle">{meta.title}</h4>
                                     </a>
-                                    <a href={meta.artistUrl} target="_blank" rel="noopener noreferrer">
-                                        <h5 className="artistColor">{meta.author}</h5>
-                                    </a>
+                                    <div className="artists">
+                                        {
+                                            meta.author.map((author, i) => (
+                                                <React.Fragment key={i}>
+                                                    <a href={meta.artistUrl[i]} target="_blank" rel="noopener noreferrer">
+                                                        <h5 className="artistColor d-inline">{author}</h5>
+                                                    </a>
+                                                    {i < meta.author.length - 1 && <span className="artistColor">, </span>}
+                                                </React.Fragment>
+                                            ))
+                                        }
+                                    </div>
+
                                     <div>
                                         <p className="progressBar">
                                             <span className="progressSec">{state.progress}</span>
@@ -288,12 +309,15 @@ export default function AudioStream() {
                             </AnimatePresence>
                         </div>
                         <div>
-                            <Button className="m-2 btnsize" onClick={handleStart} disabled={isPlaying}>Start</Button>
-                            <Button className="m-2 btnsize" variant="danger" onClick={handleStop} disabled={!isPlaying}>Disconnect</Button>
+                            <Button className="m-2 btnsize btn-sm" onClick={handleStart} disabled={isPlaying}>Start</Button>
+
+                            <Button className="m-2 btnsize btn-sm" variant="danger" onClick={handleStop} disabled={!isPlaying}>Disconnect</Button>
+
+                            <DelaySelector onChange={(val) => setStreamDelay(val)} />
                         </div>
                         <div className="my-3" id="volume">
                             <p className="volumeLabel">Volume: {Math.round(volume * 100)}%</p>
-                           
+
                             <input
                                 type="range"
                                 min="0"
@@ -309,7 +333,7 @@ export default function AudioStream() {
                 <Col>
                     <ListGroup as="ul">
                         <AnimatePresence initial={false}>
-                            {history.map((song) => (
+                            {history.map((song, index) => (
                                 <motion.div
                                     key={`${song.playedAt}`}
                                     initial={{ opacity: 0, y: -10 }}
@@ -319,14 +343,23 @@ export default function AudioStream() {
                                     className="d-flex justify-content-between align-items-start p-2 my-1 rounded"
                                     style={{ backgroundColor: "#333", color: "white" }}
                                 >
-                                    <Image src={song.img} width={50} rounded />
+                                    <Image src={song.img[index] ? song.img[index] : song.img[0]} width={50} rounded />
                                     <div className="ms-2 me-auto">
                                         <a href={song.url} target="_blank" rel="noopener noreferrer">
                                             <div className="fw-bold songTitle">{song.title}</div>
                                         </a>
-                                        <a href={song.artistUrl} target="_blank" rel="noopener noreferrer">
-                                            <span className="artistColor">{song.author}</span>
-                                        </a>
+                                        <div className="artists">
+                                            {
+                                                song.author.map((author, i) => (
+                                                    <React.Fragment key={i}>
+                                                        <a href={song.artistUrl[i]} target="_blank" rel="noopener noreferrer">
+                                                            <span className="artistColor">{author}</span>
+                                                        </a>
+                                                        {i < song.author.length - 1 && <span className="artistColor">, </span>}
+                                                    </React.Fragment>
+                                                ))
+                                            }
+                                        </div>
                                     </div>
                                     <Badge bg="dark" className="artistColor" pill>
                                         {new Date(song.playedAt).toLocaleString(navigator.language || navigator.browserLanguage)}

@@ -1,4 +1,4 @@
-body{
+body {
     margin: 30px;
     background-color: #212529;
     color: #f8f9fa;
@@ -70,10 +70,26 @@ a {
     height: 3px;
 }
 
-.volumeBar:hover, .volumeLabel:hover {
-    cursor:ew-resize;
+.volumeBar:hover,
+.volumeLabel:hover {
+    cursor: ew-resize;
 }
 
 #volume {
     user-select: none;
+}
+
+.artists {
+    display: inline-block;
+}
+
+.dropdown-item-dark {
+    background-color: transparent;
+    color: #f8f9fa;
+}
+
+.dropdown-item-dark:hover,
+.dropdown-item-dark:focus {
+    background-color: #444 !important;
+    color: #fff !important;
 }

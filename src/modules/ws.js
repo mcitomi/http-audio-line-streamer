@@ -6,11 +6,11 @@ import CONFIG from "../../config.json" with { type: "json" };
 
 var metaDatas = {
     title: "H.A.L. Stream",
-    author: "www.mcitomi.hu",
-    img: "/webplayer/assets/blank.jpg",
+    author: ["www.mcitomi.hu"],
+    img: ["/webplayer/assets/blank.jpg"],
     playedAt: Date.now(),
     url: "https://mcitomi.hu/",
-    artistUrl: "https://mcitomi.hu/",
+    artistUrl: ["https://mcitomi.hu/"],
     durationMs: 0,
     progressMs: 0
 };
@@ -120,6 +120,10 @@ function broadcastMetadata() {
 }
 
 function getByPath(obj, path) {
+    if(path.includes("[]")) {
+        return getFromArray(obj, path);
+    }
+
     return path.split('.').reduce((acc, key) => {
         if (!acc) return undefined;
 
@@ -129,6 +133,33 @@ function getByPath(obj, path) {
             return acc[arrayKey]?.[parseInt(index, 10)];
         }
 
+        if (Array.isArray(acc[key])) {
+            return acc[key][0];
+        }
+
         return acc[key];
+    }, obj);
+}
+
+function getFromArray(obj, path) {
+    const parts = path.split('.');
+
+    return parts.reduce((acc, part) => {
+        if (acc === undefined || acc === null) return undefined;
+
+        const arrayMatch = part.match(/^([^\[\]]+)\[\]$/);
+        if (arrayMatch) {
+            const arrayKey = arrayMatch[1];
+            const arr = acc[arrayKey];
+            if (!Array.isArray(arr)) return undefined;
+
+            return arr;
+        }
+
+        if (Array.isArray(acc)) {
+            return acc.map(item => item?.[part]);
+        }
+
+        return acc[part];
     }, obj);
 }
