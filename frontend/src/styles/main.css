@@ -73,3 +73,7 @@ a {
 .volumeBar:hover, .volumeLabel:hover {
     cursor:ew-resize;
 }
+
+#volume {
+    user-select: none;
+}
