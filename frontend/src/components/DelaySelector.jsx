@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 
 const delayOptions = [
     { label: "Realtime", value: 5 },
@@ -25,7 +25,7 @@ export default function DelaySelector({ onChange }) {
         onChange(value);
     };
 
-    const selectedLabel = delayOptions.find(opt => opt.value === selected)?.label || `${selected} ms`;
+    const selectedLabel = delayOptions.find(opt => opt.value === selected)?.label || `${selected} size`;
 
     return (
         <Dropdown className="mb-3">

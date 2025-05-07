@@ -1,4 +1,5 @@
 # Stream your audio line over HTTP 💫
+<img src="https://imgur.com/99udgDQ.png" width="150px">
 ​H.A.L. Streamer is a simple Node.js-based application that allows you to stream an audio line (such as a virtual sound card or microphone) over HTTP or / and websocket. The project aims to provide an easy-to-use and configurable solution for streaming audio data and optional song metadata over websocket.
 
 **Backend console:**
