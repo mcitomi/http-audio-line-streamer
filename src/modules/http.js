@@ -6,8 +6,9 @@ import { wss } from "./ws.js";
 import { LogTypes, logger } from "./logger.js";
 import { streamProcess } from "./ffmpeg.js";
 import { newClient } from "./clients.js";
+import { startHttps } from "./https.js";
 
-const app = Express();
+export const app = Express();
 
 app.get("/", (req, res) => {
     if (!req.headers['user-agent'].toLowerCase().includes("vlc") && CONFIG.stream.ws_enabled) {
@@ -48,9 +49,13 @@ app.get("/", (req, res) => {
 })
 
 const server = app.listen(CONFIG.http_port, () => {
-    logger("H.A.L. Streamer v.1.4.3. made by: @mcitomi", LogTypes.LOG);
+    logger("H.A.L. Streamer v.1.4.4. made by: @mcitomi", LogTypes.LOG);
     logger(`HTTP server listening at http://localhost:${CONFIG.http_port}/`, LogTypes.LOG);
 });
+
+if(CONFIG.https.enabled) {
+    startHttps();
+}
 
 if(CONFIG.stream.ws_enabled) {
     app.use("/webplayer", Express.static("frontend/build"));

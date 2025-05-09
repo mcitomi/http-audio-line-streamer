@@ -51,6 +51,12 @@ ffmpeg -list_devices true -f dshow -i dummy
 ```json
 {
     "http_port": 8080, // The main http server port
+    "https" : {
+        "enabled" : false,  // Enable HTTPS server
+        "port" : 443,   // Your HTTPS port
+        "certfile" : "selfsigned.crt",  // Your cert filename (in the src/cert folder)
+        "keyfile" : "selfsigned.key"    // Your cert private key filename (in the src/cert folder)
+    },
     "stream": {
         "ws_enabled" : true,    // Enable websocket stream and webpage
         "http_enabled" : true,  // Enable the HTTP stream
@@ -98,6 +104,11 @@ ffmpeg -list_devices true -f dshow -i dummy
 - Display statistics in frontend: number of stream listeners, client latency and IP address, server cpu and memory load.
 - Darkmode / color themes.
 - Auto reconnect.
+
+### 1.4.4.
+- Added support for HTTPS server and certificate.
+- Web song history style updated.
+- WebSocket calls updated to support secure connection.
 
 ### 1.4.3.
 - Delay setting added (manipulate the buffer size)! 

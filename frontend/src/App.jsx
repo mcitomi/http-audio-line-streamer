@@ -88,7 +88,7 @@ export default function AudioStream() {
     }, [volume]);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://${location.host == "localhost:3000" ? "localhost:9099" : location.host}/metadata`);
+        const ws = new WebSocket(`${location.protocol == "https:" ? "wss" : "ws"}://${location.host == "localhost:3000" ? "localhost:9099" : location.host}/metadata`);
 
         ws.onmessage = (event) => {
             try {
@@ -194,7 +194,7 @@ export default function AudioStream() {
             });
         });
 
-        const socket = new WebSocket(`ws://${location.host == "localhost:3000" ? "localhost:9099" : location.host}/ws-stream`);
+        const socket = new WebSocket(`${location.protocol == "https:" ? "wss" : "ws"}://${location.host == "localhost:3000" ? "localhost:9099" : location.host}/ws-stream`);
         socket.binaryType = 'arraybuffer';
         socketRef.current = socket;
 

@@ -1,5 +1,11 @@
 {
     "http_port": 8080,
+    "https" : {
+        "enabled" : false,
+        "port" : 443,
+        "certfile" : "selfsigned.crt",
+        "keyfile" : "selfsigned.key"
+    },
     "stream": {
         "ws_enabled" : true,
         "http_enabled" : true,
