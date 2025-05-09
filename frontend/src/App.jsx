@@ -331,7 +331,7 @@ export default function AudioStream() {
                     </div>
                 </Col>
                 <Col>
-                    <ListGroup as="ul">
+                    <ListGroup as="ul" className="history">
                         <AnimatePresence initial={false}>
                             {history.map((song, index) => (
                                 <motion.div

@@ -93,3 +93,10 @@ a {
     background-color: #444 !important;
     color: #fff !important;
 }
+
+.history {
+    height: 80vh;
+    overflow-y: scroll;
+    scrollbar-color: #6c757d #444444;
+    border-radius: 10px;
+}
