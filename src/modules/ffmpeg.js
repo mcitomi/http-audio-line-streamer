@@ -10,6 +10,8 @@ export const streamProcess = spawn('ffmpeg', [
     '-c:a', CONFIG.stream.codec,
     '-b:a', `${CONFIG.stream.bitrate}k`,
     '-f', CONFIG.stream.format,
+    '-async', '1',
+    '-vsync', '2', 
     `pipe:1`
 ]);
 
