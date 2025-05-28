@@ -11,8 +11,8 @@ var metaDatas = {
     playedAt: Date.now(),
     url: "https://mcitomi.hu/",
     artistUrl: ["https://mcitomi.hu/"],
-    durationMs: 0,
-    progressMs: 0
+    durationMs: 1000,
+    progressMs: 1000
 };
 
 const history = [];
@@ -96,13 +96,13 @@ async function updateMeta() {
             history.unshift({ ...metaDatas });
 
             metaDatas.title = newTitle;
-            metaDatas.author = getByPath(body, CONFIG.meta_infos.author_path);
-            metaDatas.img = getByPath(body, CONFIG.meta_infos.album_pic_path);
+            metaDatas.author = getByPath(body, CONFIG.meta_infos.author_path) || ["mcitomi"];
+            metaDatas.img = getByPath(body, CONFIG.meta_infos.album_pic_path) || ["/webplayer/assets/blank.jpg"];
             metaDatas.playedAt = Date.now();
-            metaDatas.url = getByPath(body, CONFIG.meta_infos.song_urL_path);
-            metaDatas.artistUrl = getByPath(body, CONFIG.meta_infos.artist_url_path);
-            metaDatas.durationMs = getByPath(body, CONFIG.meta_infos.song_duration_path);
-            metaDatas.progressMs = getByPath(body, CONFIG.meta_infos.song_progress_path);
+            metaDatas.url = getByPath(body, CONFIG.meta_infos.song_urL_path) || "https://mcitomi.hu/";
+            metaDatas.artistUrl = getByPath(body, CONFIG.meta_infos.artist_url_path) || ["https://mcitomi.hu/"];
+            metaDatas.durationMs = getByPath(body, CONFIG.meta_infos.song_duration_path) || 1000;
+            metaDatas.progressMs = getByPath(body, CONFIG.meta_infos.song_progress_path) || 1000;
 
             broadcastMetadata();
         }

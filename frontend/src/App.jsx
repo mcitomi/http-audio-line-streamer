@@ -13,7 +13,6 @@ export default function AudioStream() {
     const queueRef = useRef([]);
     const audioRef = useRef(null);
 
-
     const [isPlaying, setIsPlaying] = useState(false);
 
     const [queueBuffer, setQueueBuffer] = useState(250);
@@ -27,10 +26,6 @@ export default function AudioStream() {
 
     const [volume, setVolume] = useState(() => {
         return parseFloat(localStorage.getItem("vol")) || 0.2;
-    });
-
-    const [isDarkMode, setIsDarkMode] = useState(() => {
-        return localStorage.getItem("darkmode") === "true";
     });
 
     const [meta, setMeta] = useState({
@@ -96,7 +91,7 @@ export default function AudioStream() {
                 setMeta({
                     title: data.metaDatas.title || "Unknown",
                     author: data.metaDatas.author || ["www.mcitomi.hu"],
-                    img: data.metaDatas.img || ["/assets/blank.jpg"],
+                    img: data.metaDatas.img || ["/webplayer/assets/blank.jpg"],
                     url: data.metaDatas.url || "https://mcitomi.hu/",
                     artistUrl: data.metaDatas.artistUrl || ["https://mcitomi.hu/"],
                     durationMs: data.metaDatas.durationMs || 0,
@@ -343,7 +338,8 @@ export default function AudioStream() {
                                     className="d-flex justify-content-between align-items-start p-2 my-1 rounded"
                                     style={{ backgroundColor: "#333", color: "white" }}
                                 >
-                                    <Image src={song.img[index] ? song.img[index] : song.img[0]} width={50} rounded />
+                                    <Image src={song.img ? song.img[index] : song.img[0]} width={50} rounded />
+                                    
                                     <div className="ms-2 me-auto">
                                         <a href={song.url} target="_blank" rel="noopener noreferrer">
                                             <div className="fw-bold songTitle">{song.title}</div>

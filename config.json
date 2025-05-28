@@ -27,8 +27,8 @@
     },
     "meta_infos" : {
         "enabled" : true,
-        "api_url" : "http://localhost:8181/api/current",
-        "title_path" : "item.name",
+        "api_url" : "http://localhost:8080/webplayer/metadata.json",
+        "title_path" : "item.title",
         "author_path" : "item.artists[].name",
         "album_pic_path" : "item.album.images[].url",
         "song_urL_path" : "item.external_urls.spotify",
@@ -36,6 +36,11 @@
         "song_duration_path" : "item.duration_ms",
         "song_progress_path" : "progress_ms",
         "refresh_interval" : 3,
-        "max_history_length" : 50
+        "max_history_length" : 50,
+        "static" : {
+            "enabled" : true,
+            "writeable" : true,
+            "pwd" : "Secr3tP@ssword"
+        }
     }
 }

@@ -76,7 +76,7 @@ ffmpeg -list_devices true -f dshow -i dummy
         "save_ffmpeg_log" : false,   // Disable / Enable to save the "FFmpeg Log" screen values to a log file
         "save_resource_log" : false  // Disable / Enable to save resource usage to a log file
     },
-    "meta_infos" : {
+    "meta_infos" : {    // query song metadata from some api (or the static file if enabled)
         "enabled" : true,   // Enable to get meta informations from frontend
         "api_url" : "http://localhost:8181/api/current",    // Your api server link (for example: https://github.com/mcitomi/spotify-song-display-api ).
         "title_path" : "item.name", // The title location inside your api (example: https://github.com/mcitomi/spotify-song-display-api/blob/main/src/types/spotifyCurrentPlaying.d.ts ).
@@ -87,7 +87,12 @@ ffmpeg -list_devices true -f dshow -i dummy
         "song_duration_path" : "item.duration_ms",  // Song duration in miliseconds.
         "song_progress_path" : "progress_ms",   // Song actual progress in miliseconds.
         "refresh_interval" : 3, // The interval when the application calls the API in seconds.
-        "max_history_length" : 50   // Maximum length of music history.
+        "max_history_length" : 50,   // Maximum length of music history.
+        "static" : {    // file path over internet: http://HOST:PORT/webplayer/metadata.json
+            "enabled" : true,   // Automatically create a file
+            "writeable" : true, // Able to write this file
+            "pwd" : "Secr3tP@ssword"    // A secret password (This must be sent in the authorization header, as shown in the example below.)
+        }
     }
 }
 ```
@@ -95,6 +100,19 @@ ffmpeg -list_devices true -f dshow -i dummy
 - If you don't want to use any of the settings, just set it to Null or Undefined.
 - The settings in the configuration are set for the https://github.com/mcitomi/spotify-song-display-api application, if you stream audio from Spotify, you can use it too!
 - As shown in the example configuration, the server can handle multiple artists, i.e. arrays. (In the case of frontend artists, it displays all of them, and among the images, it selects 0 as high resolution, 2 as low resolution, if there is only one image, it uses it everywhere).
+
+#### To update static file:
+If you are reading metadata from a static file, you can update that file remotely this way. The content of the file will be the entire body object.
+
+An example request with cURL:
+```bash
+curl --location 'http://localhost:8080/meta/update' \
+--header 'Authorization: Pwd Secr3tP@ssword' \
+--header 'Content-Type: application/json' \
+--data '{
+    "title" : "My favorite song"
+}'
+```
 
 # 📝 Changelog
 #### Plans:
@@ -104,6 +122,9 @@ ffmpeg -list_devices true -f dshow -i dummy
 - Display statistics in frontend: number of stream listeners, client latency and IP address, server cpu and memory load.
 - Darkmode / color themes.
 - Auto reconnect.
+
+### 1.4.5.
+- Supports more custom metadata service with static file data reader and updater.
 
 ### 1.4.4.
 - Added support for HTTPS server and certificate.
