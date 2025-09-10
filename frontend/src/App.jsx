@@ -338,8 +338,14 @@ export default function AudioStream() {
                                     className="d-flex justify-content-between align-items-start p-2 my-1 rounded"
                                     style={{ backgroundColor: "#333", color: "white" }}
                                 >
-                                    <Image src={song.img ? song.img[index] : song.img[0]} width={50} rounded />
-                                    
+                                    <Image
+                                        src={Array.isArray(song?.img) && song.img.length > 0
+                                            ? song.img[index] ?? song.img[0]
+                                            : "/webplayer/assets/blank.jpg"}
+                                        width={50}
+                                        rounded
+                                    />
+
                                     <div className="ms-2 me-auto">
                                         <a href={song.url} target="_blank" rel="noopener noreferrer">
                                             <div className="fw-bold songTitle">{song.title}</div>
